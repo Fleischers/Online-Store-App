@@ -1,0 +1,150 @@
+<div class="container-fluid">
+    <div class="row" align="center">
+        <ol class="breadcrumb">
+            <li><a href="#myApp">Home</a></li>
+            <li><a href="#myApp/products">All Products</a></li>
+            <li class="active"><%=model.name%></li>
+        </ol>
+    </div>
+</div>
+<hr>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="thumbnail">
+                <img src="<%= model.image %>" alt="...">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-lg-9 col-md-9">
+                    <h2>
+                        <small><%=model.name%></small>
+                    </h2>
+                    <h3 id="price" data-id="<%=model.price%>"><%=model.price%>$</h3>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <h2>
+
+                        <!-- Button trigger modal -->
+                        <button id="addToCart" type="button" class="btn btn-warning" data-toggle="modal" data-target="#orderModal" data-id="<%=model._id%>">
+                            Add to Cart
+                        </button>
+
+
+
+
+
+                    </h2>
+                </div>
+            </div>
+
+            <hr>
+
+            <form class="login-form">
+                <h3>
+                    <small>Qty.</small>
+                </h3>
+                <select class="form-control" id="quantity">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </form>
+            <h3>
+                <small><%=model.description%></small>
+            </h3>
+            <hr>
+            <div class="row">
+                <div class="col-lg-9 col-md-9">
+                    <h3>
+                        <small>Reviews:</small>
+                    </h3>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <h3>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                            Add a review
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">What do you think about this
+                                            product?</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea class="form-control" rows="4" id="description"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="button" class="btn btn-primary" id="sendReview" data-dismiss="modal"
+                                                data-id="<%=model._id%>">Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </h3>
+                </div>
+            </div>
+            <hr>
+            <% if(model.productReviews){model.productReviews.forEach(function(item){ %>
+            <div class="row">
+                <div class="col-lg-2 col-md-2">
+                    <h3>
+                        <a class="thumbnail">
+                            <img src="<%=item.postedBy.avatar%>" alt="..." class="img-circle">
+                        </a>
+                    </h3>
+                </div>
+                <div class="col-lg-10 col-md-10">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-8">
+                            <h4>
+                                <small><%=item.postedBy.firstName%></small>
+                            </h4>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <h4>
+                                <small> <%=item.created%></small>
+                            </h4>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <h3><%=item.description%></h3>
+                </div>
+            </div>
+            <%})}%>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for order -->
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="orderModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <h3> Congratulations! Product is already in your Cart </h3>
+                <h3><small>Do you want to continue shopping?</small></h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Yes</button>
+                <button data-dismiss="modal" type="button" class="btn btn-success" id="toCart">Go to Cart</button>
+            </div>
+        </div>
+    </div>
+</div>

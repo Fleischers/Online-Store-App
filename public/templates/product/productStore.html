@@ -1,0 +1,65 @@
+<div class="container-fluid">
+    <div class="row" align="center">
+        <ol class="breadcrumb">
+            <li><a href="#myApp">Home</a></li>
+            <li class="active">All Products</li>
+        </ol>
+    </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-2">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width:100%">
+                    <h5>#Select category: <span class="caret"></span></h5>
+
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#myApp/products">All</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#myApp/categories/q=Music">Music</a></li>
+                    <li><a href="#myApp/categories/q=Clothes">Clothes</a></li>
+                    <li><a href="#myApp/categories/q=Other">Other</a></li>
+                    <li><a href="#myApp/categories/q=Sale!">SALE!</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-10 col-md-10">
+            <% collection.forEach(function(model){ %>
+            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5" id="product">
+                <div class="thumbnail" id="<%=model._id%>">
+                    <img src="<%=model.image%>" alt="">
+                    <div class="caption">
+                        <h4><a><%=model.name%></a></h4>
+                        <p style="color: #9d9d9d"><%=model.price%>$</p>
+                    </div>
+                </div>
+            </div>
+            <%})%>
+        </div>
+    </div>
+    <div class="row" align="center">
+        <nav>
+            <ul class="pagination">
+                <li>
+                    <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li><a href="#myApp/products/p=1">1</a></li>
+                <li><a href="#myApp/products/p=2">2</a></li>
+                <li><a href="#myApp/products/p=3">3</a></li>
+                <li><a href="#myApp/products/p=4">4</a></li>
+                <li><a href="#myApp/products/p=5">5</a></li>
+                <li>
+                    <a href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+
+
+

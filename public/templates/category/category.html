@@ -1,0 +1,78 @@
+<div class="container-fluid">
+    <div class="col-md-2"><h3><%=model.name%></h3></div>
+    <div class="col-md-8"></div>
+    <div class="col-md-2">
+
+        <h3><div class="btn-group">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Add product <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" id="addProduct">
+                <% (collection).forEach(function(model){ %>
+                <li id="<%=model._id%>"><p><%=model.name%></p></li>
+                <%})%>
+            </ul>
+        </div></h3>
+
+    </div>
+</div>
+<hr>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-5">
+                <div class="thumbnail">
+                    <img src="<%= model.image %>" alt="...">
+                </div>
+
+                <form enctype="multipart/form-data" method="POST" action="/categories/<%= model._id%>" id="avatar">
+                    <input type="file" name="file">
+                   <input type="submit">
+                </form>
+
+                <hr>
+                <button type="button" class="btn btn-danger" style="width: 100%" id="removeBtn">Delete</button>
+            </div>
+            <div class="col-md-7">
+                <div>
+                    <h4 id="main">Information:</h4>
+                    <h4 id="hint" style="color: red" hidden>Click any field to edit Info :)</h4>
+                </div>
+                <table class="table table-hover" id="edit">
+                    <tr>
+                        <td><strong>Name: </strong></td>
+                        <td id="name">
+                            <span><%=model.name%></span>
+                            <input class="edit" value="<%=model.name%>" hidden>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Description: </strong></td>
+                        <td id="description">
+                            <span><%=model.description%></span>
+                            <input class="edit" value="<%=model.description%>" hidden>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h4>Product:</h4>
+            <table class="table">
+                <tr>
+                    <td><strong>Product ID: </strong></td>
+                    <td><strong>Product name: </strong></td>
+                </tr>
+                <% if(model.products){model.products.forEach(function(item){ %>
+                <tr>
+
+                    <td><%=item._id%></td>
+                    <td><%=item.name%></td>
+
+                </tr>
+                <%})}%>
+            </table>
+
+        </div>
+    </div>
+</div>

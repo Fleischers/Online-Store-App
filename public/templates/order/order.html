@@ -1,0 +1,89 @@
+<div class="container-fluid">
+    <div class="row" align="center">
+        <ol class="breadcrumb">
+            <li><a href="#myApp">Home</a></li>
+            <li class="active">Cart</li>
+        </ol>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 col-md-8">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <td><h4><strong>#Name:</strong></h4></td>
+                        <td><h4 align="center"><strong>#Qty.:</strong></h4></td>
+                        <td><h4 align="right"><strong>#Price:</strong></h4></td>
+                    </tr>
+                    <% model.products.forEach(function(item){ %>
+                    <tr>
+                        <td id="name">
+                            <h5><%=item.name%></h5>
+                        </td>
+                        <td>
+                            <h5 align="center"><%= model.itemsQuantity[_.indexOf(model.products, item)]%></h5>
+                        </td>
+                        <td>
+                            <h5 align="right"><%=item.price%>$</h5>
+                        </td>
+                    </tr>
+                    <%})%>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <td><h4><strong>#Customer info: </strong></h4></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><h5><strong>#First name:</strong></h5></td>
+                        <td>
+                            <h5><%=model.customerInfo[0].firstName%></h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h5><strong>#Last name:</strong></h5></td>
+                        <td>
+                            <h5><%=model.customerInfo[0].lastName%></h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h5><strong>#Phone:</strong></h5></td>
+                        <td>
+                            <h5><%=model.customerInfo[0].phone%></h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h5><strong>#Address:</strong></h5></td>
+                        <td>
+                            <h5><%=model.customerInfo[0].address%></h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h5><strong>#Email:</strong></h5></td>
+                        <td>
+                            <h5><%=model.customerInfo[0].email%></h5>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-lg-10 col-md-10">
+            <h5><strong>#Comment: </strong> <%=model.comment%></h5>
+            <h2>Total Price: <%=model.totalPrice%>$</h2>
+        </div>
+        <div class="col-lg-2 col-md-2">
+            <h2>
+                <button id="placeOrder" type="button" class="btn btn-lg btn-warning">Fulfill Order
+                </button>
+            </h2>
+        </div>
+    </div>
+</div>

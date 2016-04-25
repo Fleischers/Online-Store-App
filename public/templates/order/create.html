@@ -1,0 +1,68 @@
+<div class="container-fluid">
+    <div class="row" align="center">
+        <ol class="breadcrumb">
+            <li><a href="#myApp">Home</a></li>
+            <li class="active">Cart</li>
+        </ol>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <td><h4><strong>#Name:</strong></h4></td>
+                        <td><h4 align="center"><strong>#Qty.:</strong></h4></td>
+                        <td><h4 align="right"><strong>#Price:</strong></h4></td>
+                    </tr>
+                    <% model.products.forEach(function(item){ %>
+                    <tr>
+                        <td id="name">
+                            <h5><%=item.name%></h5>
+                        </td>
+                        <td>
+                            <h5 align="center"><%= model.itemsQuantity[_.indexOf(model.products, item)]%></h5>
+                        </td>
+                        <td>
+                            <h5 align="right"><%=item.price%>$</h5>
+                        </td>
+                    </tr>
+                    <%})%>
+                </table>
+                <hr>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-7">
+                            <h2>Total Price: <%=model.totalPrice%>$</h2>
+                        </div>
+                        <div class="col-lg-2 col-md-2">
+                            <h2>
+                                <button id="placeOrder" type="button" class="btn btn-warning">Place Order
+                                </button>
+                            </h2>
+                        </div>
+                        <div class="col-lg-2 col-md-2">
+                            <h2>
+                                <button id="cancelOrder" type="button" class="btn btn-danger">Cancel Order
+                                </button>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <td><h4><strong>#Add a comment:</strong></h4></td>
+                    </tr>
+                    <tr>
+                        <td><textarea id="comment" class="form-control" rows="9"></textarea></td></tr>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

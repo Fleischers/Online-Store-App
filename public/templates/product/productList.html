@@ -1,0 +1,37 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2"><h3>Products</h3></div>
+        <div class="col-md-8"></div>
+        <div class="col-md-2">
+            <h3>
+                <button type="button" class="btn btn-default" id="createBtn1">Create</button>
+                <button type="button" class="btn btn-default" id="removeBtn">Delete</button>
+            </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <td></td>
+                    <td><strong>#Name:</strong></td>
+                    <td><strong>#Price:</strong></td>
+                    <td><strong>#Status Enabled:</strong></td>
+                </tr>
+                <% collection.forEach(function(model){ %>
+                <tr id="<%=model._id%>">
+                    <td><label><input type="checkbox" id="blankCheckbox" data-id="<%=model._id%>"></label></td>
+                    <td id="name"><%=model.name%></td>
+                    <td><%=model.price%>$</td>
+                    <td><%=model.statusEnabled%></td>
+                </tr>
+                <%})%>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+

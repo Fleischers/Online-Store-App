@@ -1,0 +1,45 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2"><h3>Orders</h3></div>
+        <div class="col-md-9"></div>
+        <div class="col-md-1">
+            <h3>
+                <button type="button" class="btn btn-default" id="removeBtn">Delete</button>
+            </h3>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="menu">
+        <li role="presentation" class="active"><a href="#myAdmin/orders">All</a></li>
+        <li role="presentation"><a href="#myAdmin/orders/q=Placed">Placed</a></li>
+        <li role="presentation"><a href="#myAdmin/orders/q=Fulfilled">Fulfilled</a></li>
+        <li role="presentation"><a href="#myAdmin/orders/q=Abandoned">Abandoned</a></li>
+    </ul>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <td></td>
+                    <td><strong>#Created:</strong></td>
+                    <td><strong>#Placed by:</strong></td>
+                    <td><strong>#Total price:</strong></td>
+                    <td><strong>#Status:</strong></td>
+                </tr>
+                <% collection.forEach(function(model){ %>
+                <tr id="<%=model._id%>">
+                    <td><label><input type="checkbox" id="blankCheckbox" data-id="<%=model._id%>"></label></td>
+                    <td id="name"><%=model.created%></td>
+                    <td><%=model.customerInfo[0].firstName%></td>
+                    <td><%=model.totalPrice%>$</td>
+                    <td><%=model.status%></td>
+                </tr>
+                <%})%>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+

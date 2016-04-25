@@ -1,0 +1,50 @@
+<div class="container-fluid">
+    <div class="row" align="center">
+        <ol class="breadcrumb">
+            <li><a href="#myApp">Home</a></li>
+            <li class="active"><%=collection[0].name%></li>
+        </ol>
+    </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-2">
+            <div class="thumbnail" id="<%=collection[0]._id%>">
+                <img src="<%=collection[0].image%>" alt="">
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true" style="width:100%">
+                    <h5>#Select category: <span class="caret"></span></h5>
+
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#myApp/products">All</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#myApp/categories/q=Music">Music</a></li>
+                    <li><a href="#myApp/categories/q=Clothes">Clothes</a></li>
+                    <li><a href="#myApp/categories/q=Other">Other</a></li>
+                    <li><a href="#myApp/categories/q=Sale!">SALE!</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-10 col-md-10">
+            <% collection.forEach(function(item){ %>
+            <% item.products.forEach(function(item){ %>
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" id="product">
+                <div class="thumbnail" id="<%=item._id%>">
+                    <img src="<%=item.image%>" alt="">
+                    <div class="caption">
+                        <h4><a><%=item.name%></a></h4>
+                        <p style="color: #9d9d9d"><%=item.price%>$</p>
+                    </div>
+                </div>
+            </div>
+            <%})%>
+            <%})%>
+        </div>
+    </div>
+</div>
+
+
+
+
+

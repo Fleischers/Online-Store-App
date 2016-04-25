@@ -1,0 +1,110 @@
+<div id="login-form" class="container-fluid" style="height: 800px; background-color: #9d9d9d;">
+    <div class="row" style="height: 100px"></div>
+    <div class="container" style="height: 500px; width: 500px; background-color: #ffffff;">
+        <div class="form-group">
+            <h2 style="padding-bottom: 5px; border-bottom: 2px solid">Log in chat</h2>
+            <form action="" class="navbar-form" align="center">
+                <p>
+                <h3>
+                    <small>Email</small>
+                </h3>
+                <input id="email" type="text" placeholder="" value=""
+                       style="width: 330px; height: 40px; font-size: 18px;">
+                <h3>
+                    <small>Password</small>
+                </h3>
+                <input id="password" type="text" placeholder="" value=""
+                       style="width: 330px; height: 40px; font-size: 18px;">
+                </p>
+
+                <button id="logInChat" class="btn" type="button"
+                        style="width: 330px; height: 40px; background-color: #0f0f0f;">
+                    <p style="font-size: 18px; color: #eeeeee; margin-bottom: 0px;">Log In</p>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="containet-fluid" id="hiddenChat" hidden>
+    <div class="container">
+        <div class="row " style="padding-top:40px;">
+            <div class="col-md-8">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        RECENT CHAT HISTORY
+                    </div>
+                    <div class="panel-body">
+                        <ul class="media-list" id="media">
+
+                           <!-- <li class="media">
+
+                                <div class="media-body">
+
+                                    <div class="media">
+                                        <a class="pull-left" href="#">
+                                            <img class="media-object img-circle " src=""/>
+                                        </a>
+                                        <div class="media-body">
+                                            Donec sit amet ligula enim. Duis vel condimentum massa.
+
+                                            Donec sit amet ligula enim. Duis vel condimentum massa.Donec sit amet ligula
+                                            enim.
+                                            Duis vel condimentum massa.
+                                            Donec sit amet ligula enim. Duis vel condimentum massa.
+                                            <br/>
+                                            <small class="text-muted">Jhon Rexa | 23rd June at 5:00pm</small>
+                                            <hr/>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </li>-->
+
+                        </ul>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="input-group">
+                            <input id="message" type="text" class="form-control" placeholder="Enter Message"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-info" type="button" id="sendMessage">SEND</button>
+                                    </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        ONLINE USERS
+                    </div>
+                    <div class="panel-body">
+                        <ul class="media-list">
+
+                            <li class="media">
+
+                                <div class="media-body">
+
+                                    <div class="media">
+                                        <a class="pull-left" href="#">
+                                            <img class="media-object img-circle" style="max-height:40px;"
+                                                 src=""/>
+                                        </a>
+                                        <div class="media-body">
+                                            <h5>Alex Deo | User </h5>
+
+                                            <small class="text-muted">Active From 3 hours</small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

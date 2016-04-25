@@ -1,0 +1,109 @@
+<div class="container-fluid">
+    <div class="col-md-12"><h3><%=model.name%></h3></div>
+</div>
+<hr>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-5">
+                <div class="thumbnail" id="imgPlace">
+                    <img src="<%= model.image %>" alt="..." id="image">
+                    <img src="" alt="" id="img2" hidden>
+                </div>
+                <!--<div class="thumbnail" id="img2" hidden>
+
+                </div>-->
+
+
+                <button type="button" class="btn btn-default" style="width: 100%" data-toggle="modal"
+                        data-target="#myModal">
+                    Upload new image
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                    <span class="btn btn-default btn-file">Browse new image!<input type="file"
+                                                                                                   name="file"
+                                                                                                   id="imageInput"></span>
+                                </h4>
+                            </div>
+                            <div class="modal-body" align="center">
+                                <h4 id="adminHint" align="center"><small>Beware, your image should be 500x500 px!</small></h4>
+                                <a class="thumbnail">
+                                    <canvas id="myCanvas" width="500" height="500"></canvas>
+                                </a>
+                                <img id="canvasImg" alt="Right click to save me!" hidden>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" data-id="<%= model._id%>" id="uploadImg">
+                                    Save image
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                <button type="button" class="btn btn-danger" style="width: 100%" id="removeBtn">Delete</button>
+            </div>
+            <div class="col-md-7">
+                <div>
+                    <h4 id="main">Information:</h4>
+                    <h4 id="hint" style="color: red" hidden>Click any field to edit Info :)</h4>
+                </div>
+                <table class="table table-hover" id="edit">
+                    <tr>
+                        <td><strong>Name: </strong></td>
+                        <td id="name">
+                            <span><%=model.name%></span>
+                            <input class="edit" value="<%=model.name%>" hidden>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Price: </strong></td>
+                        <td id="price">
+                            <span><%=model.price%>$</span>
+                            <input class="edit" value="<%=model.price%>" hidden>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Status Enabled: </strong></td>
+                        <td id="statusEnabled">
+                            <span><%=model.statusEnabled%></span>
+                            <input class="edit" value="<%=model.statusEnabled%>" hidden>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Description: </strong></td>
+                        <td id="description">
+                            <span><%=model.description%></span>
+                            <input class="edit" value="<%=model.description%>" hidden>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h4>Categories:</h4>
+            <table class="table">
+                <% if(model.categories){model.categories.forEach(function(item){ %>
+                <tr>
+                    <td><%=item.name%></td>
+                </tr>
+                <%})}%>
+            </table>
+
+        </div>
+    </div>
+
+
+</div>
+
+

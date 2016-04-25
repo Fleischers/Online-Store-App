@@ -1,0 +1,94 @@
+<div class="container-fluid">
+    <div class="col-md-11"><h3 id="name"><%=model.firstName%> <%=model.lastName%></h3></div>
+    <div class="col-md-1"><h3><button class="btn btn-default" id="logOutBtn" name="<%= model._id%>">Log Out</button></h3></div>
+</div>
+<hr>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-5">
+                <div class="thumbnail">
+                    <img src="<%= model.avatar %>" alt="...">
+                </div>
+
+                <form enctype="multipart/form-data" method="POST" action="/users/<%= model._id%>" id="avatar">
+                    <input type="file" name="file">
+                   <input type="submit" id="addImage" data-id="<%=model._id%>">
+                </form>
+
+                <hr>
+                <button type="button" class="btn btn-danger" style="width: 100%" id="removeBtn">Delete me</button>
+            </div>
+            <div class="col-md-7">
+                <div>
+                    <h4 id="main">My information:</h4>
+                    <h4 id="hint" style="color: red" hidden>Click any field to edit Info :)</h4>
+                </div>
+                <table class="table table-hover" id="edit">
+                    <tr>
+                        <td><strong>First name: </strong></td>
+                        <td id="firstName">
+                            <span><%=model.firstName%></span>
+                            <input class="edit" value="<%=model.firstName%>" hidden>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Last name: </strong></td>
+                        <td id="lastName">
+                            <span><%=model.lastName%></span>
+                            <input class="edit" value="<%=model.lastName%>" hidden>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phone number: </strong></td>
+                        <td id="phone">
+                            <span><%=model.phone%></span>
+                            <input class="edit" value="<%=model.phone%>" hidden>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email: </strong></td>
+                        <td id="email">
+                            <span><%=model.email%></span>
+                            <input class="edit" value="<%=model.email%>" hidden>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Address: </strong></td>
+                        <td id="address">
+                            <span><%=model.address%></span>
+                            <input class="edit" value="<%=model.address%>" hidden>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Date of birth: </strong></td>
+                        <td id="birthday">
+                            <span><%=model.birthday%></span>
+                            <input class="edit" value="<%=model.birthday%>" hidden>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <!--<h4>My orders:</h4>
+            <table class="table">
+                <tr>
+                    <td><strong>Order ID: </strong></td>
+                    <td><strong>Date: </strong></td>
+                    <td><strong>Total price:</strong></td>
+                    <td><strong>Status:</strong></td>
+                </tr>
+                <tr>
+                    <% if(model.orders){model.orders.forEach(function(item){ %>
+                    <td><%=item._id%></td>
+                    <td><%=item.created%></td>
+                    <td><%=item.totalPrice%>$</td>
+                    <td><%=item.status%></td>
+                    <%})}%>
+                </tr>
+            </table>-->
+
+        </div>
+    </div>
+</div>
