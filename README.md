@@ -1,12 +1,9 @@
 # Online Store App
 
-NodeJS version 5.6.0 or higher required
-
-  - Open project with WebStorm (or another IDE)
-  - Configure Enviroment variables with 'NODE_ENV=development'
-  - Install required modules: npm install & bower install
+  - Configure Enviroment variables with 'NODE_ENV=development' or 'NODE_ENV=production'
+  - Install required modules: npm install && bower install`
   - Open MongoDB connection
-  - Run server.js with Node
+  - Run server.js with NodeJS
 
 ### Isert valid user into database:
 
