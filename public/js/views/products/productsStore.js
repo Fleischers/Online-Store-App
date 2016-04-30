@@ -3,9 +3,11 @@ define([
     'underscore',
     'text!templates/product/productForStore.html',
     'models/product',
-    'models/productReview'
+    'models/productReview',
+    'collections/productReviews',
+    'collections/productReviewsCount'
     /*'ENTER_KEY'*/
-], function (Backbone, _, productTemplate, Product, Review) {
+], function (Backbone, _, productTemplate, Product, Review, ProductReviews, Count) {
     var model;
     var self;
     var $target;
@@ -30,11 +32,20 @@ define([
         events: {
             'click #sendReview': 'onSendReview',
             'click #addToCart' : 'onAddToCart',
-            'click #toCart'    : 'onCart'
+            'click #toCart'    : 'onCart',
+            'click li#page'    : 'onPage'
         },
 
         initialize: function (opt) {
+            console.log(opt);
+            var number;
+            var page;
+            var count;
+            this.page = opt.page;
+
             self = this;
+            page = this.page || 1;
+            count = count || 5;
 
             this.model = new Product({_id: opt.id});
             this.model.fetch({
@@ -46,16 +57,47 @@ define([
                     alert('error');
                 }
             });
+
+            this.collection = new ProductReviews();
+            this.collection.fetch({
+                reset: true,
+                data : {
+                    page  : page,
+                    count : count,
+                    filter: opt.id
+                }
+            });
+
+            this.additionalCollection = new Count();
+            this.additionalCollection.fetch({
+                async: false,
+                reset: true,
+                data : {
+                    filter: opt.id
+                }
+            }).done(function (result) {
+                number = result.success;
+                return number;
+            });
+
+            this.pages = Math.ceil(number / count);
+
             this.render();
         },
 
         onSendReview: function (e) {
+            var url;
+            var basicUrl;
+            var page;
+            page=this.pages;
+            console.log(page);
             $target = $(e.target);
             $thisEl = this.$el;
             description = $thisEl.find('#description').val();
             product = $target.attr('data-id');
 
             $.ajax({
+                async  : false,
                 url    : 'isAuth',
                 success: function (params) {
                     postedBy = params.success;
@@ -71,9 +113,11 @@ define([
                     this.model.save(null, {
                         wait   : true,
                         success: function (model) {
-
+                            alert('Review added');
+                            basicUrl = Backbone.history.fragment;
+                            url = basicUrl.substring(0, basicUrl.length - 1);
                             Backbone.history.fragment = '';
-                            Backbone.history.navigate('#myApp/products/' + product, {trigger: true})
+                            Backbone.history.navigate(url+page, {trigger: true})
                         },
                         error  : function (model, xhr) {
                             alert(xhr.statusText);
@@ -119,11 +163,45 @@ define([
             Backbone.history.navigate('#myApp/cart', {trigger: true})
         },
 
+        onPage: function (e) {
+            var $target;
+            var $page;
+            var url;
+            var basicUrl;
+            e.stopPropagation();
+
+            $target = $(e.target);
+            $page = $target.html();
+            basicUrl = Backbone.history.fragment;
+            url = basicUrl.substring(0, basicUrl.length - 1);
+            Backbone.history.navigate('#' + url + $page, {trigger: true});
+        },
+
         render: function () {
+            var collection;
+            var $thisEl;
+            var $li;
+            var pages = this.pages;
             model = this.model.toJSON();
+            collection = this.collection.toJSON();
+            console.log(pages);
 
-            this.$el.html(this.template({model: model}));
+            var pagesArr = [];
+
+            for (var i = 0; i < pages; i++) {
+                pagesArr.push(i + 1);
+            }
+
+            this.$el.html(this.template({
+                model     : model,
+                collection: collection,
+                pages     : pagesArr
+            }));
+
+            $thisEl = this.$el;
+
+            $li = $thisEl.find("[data-id='" + this.page + "']");
+            $li.addClass('active');
         }
-
     });
 });

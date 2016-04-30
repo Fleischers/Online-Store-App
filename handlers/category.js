@@ -61,14 +61,27 @@ module.exports = function () {
     };
 
     this.fetch = function (req, res, next) {
+        var sort;
         query = req.query.filter;
         paginate = req.query.count;
         page = req.query.page;
+        sort=req.query.sort;
 
         if (query) {
             filter = {name: query}
         } else {
             filter = {}
+        }
+
+        if(sort){
+            var index=sort.indexOf(':');
+            var field=sort.substring(0,index);
+            var rule=sort.substring(index+1);
+            if(field=='name'){
+                sort={name: rule};
+            }else if(field=='created'){
+                sort={created: rule};
+            }
         }
 
         Category.find(filter, {
@@ -82,6 +95,7 @@ module.exports = function () {
             })
             .skip((page - 1) * paginate)
             .limit(paginate)
+            .sort(sort)
             .exec(function (err, categories) {
                 if (err) {
 

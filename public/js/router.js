@@ -13,7 +13,7 @@ define([
             'myApp/forgotPass'                                        : 'forgotPassRouter',
             'myApp/resetPass/:token'                                  : 'resetPassRouter',
             'myApp/:content(/q=:query)(/s=:sort)(/p=:page)(/c=:count)': 'storeContentRouter',
-            'myApp/:content/:id'                                      : 'storeItemRouter',
+            'myApp/:content/:id(/p=:page)(/c=:count)'                 : 'storeItemRouter',
             'myApp/:content/account/:id'                              : 'userRouter',
             'myApp/users/create'                                      : 'usersCreationRouter',
             'myAdmin'                                                 : 'adminPageRouter',
@@ -175,7 +175,7 @@ define([
                         page  : page,
                         count : count,
                         filter: query,
-                        sort: sort
+                        sort  : sort
                     }
                 });
 
@@ -195,7 +195,7 @@ define([
             });
         },
 
-        storeItemRouter: function (content, id) {
+        storeItemRouter: function (content, id, page) {
             var self;
             var viewUrl;
             this.pageRouter.call();
@@ -217,6 +217,7 @@ define([
 
                 self.view = new CreateView({
                     id     : id,
+                    page   : page,
                     channel: self.channel
                 });
             });

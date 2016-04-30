@@ -12,13 +12,14 @@ define([
         el: '#container-nav',
 
         events: {
-            'click a#user'         : 'onUserPage',
-            'click a#home'         : 'onHome',
-            'click a#gohome'       : 'onHome',
-            'click a#chat'         : 'onChat',
-            'click a#cart'         : 'onCart',
-            'click a#products'     : 'onProducts',
-            'click li#search'      : 'onSearch',
+            'click a#user'        : 'onUserPage',
+            'click a#home'        : 'onHome',
+            'click a#gohome'      : 'onHome',
+            'click a#chat'        : 'onChat',
+            'click a#cart'        : 'onCart',
+            'click a#products'    : 'onProducts',
+            'click a#categories'    : 'onCategories',
+            'click li#search'     : 'onSearch',
             'click a#categoryName': 'onCategory'
         },
 
@@ -46,20 +47,25 @@ define([
             this.render();
         },
 
-        onCategory: function (e){
+        onCategory: function (e) {
             var $target;
             var categoryQuery;
 
             e.stopPropagation();
-            $target=$(e.target);
-            categoryQuery=$target.attr('data-id');
-            Backbone.history.fragment='';
-            Backbone.history.navigate('#myApp/products/q='+categoryQuery+'/p=1',{trigger: true});
+            $target = $(e.target);
+            categoryQuery = $target.attr('data-id');
+            Backbone.history.fragment = '';
+            Backbone.history.navigate('#myApp/products/q=' + categoryQuery + '/p=1', {trigger: true});
         },
 
         onProducts: function (e) {
             Backbone.history.fragment = '';
             Backbone.history.navigate('#myApp/products/p=1', {trigger: true});
+        },
+
+        onCategories: function(e){
+            Backbone.history.fragment = '';
+            Backbone.history.navigate('#myApp/categories/p=1', {trigger: true});
         },
 
         onCart: function (e) {
@@ -78,7 +84,7 @@ define([
                 alert('Type something!');
             } else {
                 Backbone.history.fragment = '';
-                Backbone.history.navigate('#myApp/products/q=' + $searchFor+'/p=1', {trigger: true});
+                Backbone.history.navigate('#myApp/products/q=' + $searchFor + '/p=1', {trigger: true});
             }
         },
 

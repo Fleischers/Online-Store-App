@@ -32,11 +32,23 @@ module.exports = function () {
     };
 
     this.fetch = function (req, res, next) {
+        var query;
+        var filter;
+        var page;
+        var paginate;
+        query = req.query.filter;
+        paginate = req.query.count;
+        page = req.query.page;
+
+        if (query) {
+            filter = {product: query}
+        } else {
+            filter = {}
+        }
 
         ProductReview
-            .find({}, {
-                __v    : 0,
-                created: 0
+            .find(filter, {
+                __v    : 0
             })
             .populate({
                 path  : 'postedBy',
@@ -46,7 +58,9 @@ module.exports = function () {
                 path  : 'product',
                 select: 'name'
             })
-            .limit(20)
+            .skip((page - 1) * paginate)
+            .limit(paginate)
+            .sort({created: 1})
             .exec(function (err, productReviews) {
                 if (err) {
 
@@ -55,6 +69,26 @@ module.exports = function () {
 
                 res.status(200).send(productReviews);
             })
+    };
+
+    this.countModels = function (req, res, next) {
+        var query;
+        var filter;
+        query = req.query.filter;
+
+        if (query) {
+            filter = {product: query}
+        } else {
+            filter = {}
+        }
+
+        ProductReview.count(filter, function (err, count) {
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200).send({success: count});
+        })
     };
 
     this.fetchById = function (req, res, next) {

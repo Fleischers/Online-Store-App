@@ -7,8 +7,9 @@ var userHandler = new UserHandler();
 var productHandler = new ProductHandler();
 var handler = new ProductReviewHandler();
 
-router.param('id', handler.validateData);
 router.get('/', handler.fetch);
+router.get('/count', handler.countModels);
+router.param('id', handler.validateData);
 router.post('/', handler.createProductReview,userHandler.updateUser, productHandler.updateProduct);
 router.get('/:id', handler.fetchById);
 router.put('/:id', handler.updateProductReview);
