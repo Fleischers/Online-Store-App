@@ -24,7 +24,7 @@ module.exports = function () {
             return next(new HttpError(400, 'Invalid ID'));
         }
 
-        Order.find({_id: id}, function (err, orders) {
+        PlainOrder.find({_id: id}, function (err, orders) {
             if (err) {
                 next(err);
             }
@@ -33,7 +33,17 @@ module.exports = function () {
     };
 
     this.countModels = function (req, res, next) {
-        Order.count({}, function (err, count) {
+        if (query) {
+            if(query=='All'){
+                filter={};
+            }else{
+                filter = {status: query};
+            }
+        } else {
+            filter = {};
+        }
+
+        PlainOrder.count(filter, function (err, count) {
             if (err) {
                 return next(err);
             }
@@ -52,9 +62,13 @@ module.exports = function () {
         page = req.query.page;
 
         if (query) {
-            filter = {status: query}
+            if(query=='All'){
+                filter={};
+            }else{
+                filter = {status: query};
+            }
         } else {
-            filter = {}
+            filter = {};
         }
 
         /* var dbQuery;
@@ -161,6 +175,8 @@ module.exports = function () {
          res.status(200).send(orders);
          });*/
         PlainOrder.find(filter, {__v: 0})
+            .skip((page - 1) * paginate)
+            .limit(paginate)
             .exec(function (err, orders) {
                 if (err) {
 
@@ -246,6 +262,22 @@ module.exports = function () {
     this.updateOrder = function (req, res, next) {
         var comment;
         var status;
+        var id;
+        id=req.params.id;
+        comment=req.body.comment;
+        status=req.body.status;
+        console.log(req.params.id, req.body);
+
+        PlainOrder
+            .findByIdAndUpdate(id,{comment: comment, status: status})
+            .exec(function (err, orders) {
+                if (err) {
+
+                    return next(err);
+                }
+
+                res.status(200).send(orders);
+            })
 
     };
 

@@ -126,7 +126,6 @@ define([
             var viewUrl;
             var collectionUrl;
             var collection;
-            var num;
             var pageCount;
             var countUrl;
             this.pageRouter.call();
@@ -322,11 +321,17 @@ define([
             var self;
             var viewUrl;
             var collectionUrl;
+            var collection;
+            var countUrl;
+            var numbers;
+            var pageCount;
+            var num;
 
             this.adminRouter.call();
 
             self = this;
             collectionUrl = 'collections/' + content;
+            countUrl = 'collections/' + content + 'Count';
             viewUrl = 'views/' + content + '/list';
 
             if (content == 'home') {
@@ -345,7 +350,10 @@ define([
             }
 
             function viewCreator() {
-                collection = this;
+                collection = this[0];
+                query = this[1];
+                pageCount = this[2];
+                page = this[3];
 
                 require([
                     viewUrl
@@ -355,15 +363,19 @@ define([
                     }
                     self.view = new View({
                         collection: collection,
+                        pageCount : pageCount,
+                        page      : page,
+                        query     : query,
                         channel   : self.channel
                     });
                 });
             }
 
             require([
-                collectionUrl
-            ], function (Collection) {
+                collectionUrl, countUrl
+            ], function (Collection, Count) {
                 collection = new Collection();
+                numbers = new Count();
 
                 query = query || '';
                 page = page || 1;
@@ -378,7 +390,20 @@ define([
                             filter: query
                         }
                     });
-                collection.on('reset', viewCreator, collection)
+                numbers.fetch({
+                    async: false,
+                    reset: true,
+                    data : {
+                        filter: query
+                    }
+                }).done(function (result) {
+                    num = result.success;
+                    return num;
+                });
+
+                pageCount = Math.ceil(num / count);
+                console.log(num);
+                collection.on('reset', viewCreator, [collection, query, pageCount, page])
             });
         },
 

@@ -13,17 +13,22 @@ define([
         el: '#container',
 
         events: {
-            'click #banBtn'    : 'onBan',
-            'click #unbanBtn'  : 'onUnban',
-            'click #createBtn1': 'onCreate',
-            'click #firstName' : 'onAccount',
-            'click #name'      : 'onAccount',
-            'click #removeBtn' : 'onRemove',
-            'click #product'   : 'onProduct'
+            'click #banBtn'                : 'onBan',
+            'click #unbanBtn'              : 'onUnban',
+            'click #createBtn1'            : 'onCreate',
+            'click #firstName'             : 'onAccount',
+            'click #name'                  : 'onAccount',
+            'click #removeBtn'             : 'onRemove',
+            'click #product'               : 'onProduct',
+            'click li[role="presentation"]': 'onOrderByStatus'
         },
 
         initialize: function (opt) {
+            this.query = opt.query;
             this.channel = opt.channel;
+            this.pageCount=opt.pageCount;
+            this.page=opt.page;
+            console.log(opt);
             this.render();
         },
 
@@ -141,8 +146,26 @@ define([
             });
         },
 
-        render: function () {
+        onOrderByStatus: function (e) {
+            e.stopPropagation();
+            var $thisEl;
+            var query;
+            $thisEl = $(e.target);
+            query = $thisEl.text();
+            Backbone.history.fragment = '';
+            Backbone.history.navigate('#myAdmin/' + this.contentType + '/q=' + query + '/p=1', {trigger: true});
+        },
 
+        render: function () {
+            var $thisEl;
+            var $li;
+            var pages = this.pageCount;
+            var pagesArr=[];
+
+            for (var i = 0; i < pages; i++) {
+                pagesArr.push(i + 1);
+            }
+            console.log(this.pageCount);
             $.ajax({
                 url    : 'isAuthAdmin',
                 success: function (params) {
@@ -152,8 +175,21 @@ define([
                     Backbone.history.navigate('#myAdmin', {trigger: true});
                 }
             });
-            console.log(this.collection.toJSON());
-            this.$el.html(this.template({collection: this.collection.toJSON()}));
+
+            this.$el.html(this.template({
+                collection: this.collection.toJSON(),
+                pages     : pagesArr
+            }));
+
+            if (this.query) {
+                $thisEl = this.$el;
+                $li = $thisEl.find('li.' + this.query);
+                if ($li) {
+                    $li.addClass('active')
+                }
+            }
+            $li = $thisEl.find("[data-id='" + this.page + "']");
+            $li.addClass('active');
         }
     });
 });

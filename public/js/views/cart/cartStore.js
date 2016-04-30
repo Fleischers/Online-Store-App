@@ -52,7 +52,7 @@ define([
             $thisEl = this.$el;
             $comment = $thisEl.find('#comment').val();
 
-            if (($comment.search(/<html>/i) != -1) || (description.search(/<script>/i) != -1)) {
+            if (($comment.search(/<html>/i) != -1) || ($comment.search(/<script>/i) != -1)) {
                 err.push('Don\'t even think to do smth like this')
             }
 

@@ -49,7 +49,7 @@ define([
 
         onOrders: function (e) {
             baseUrl = '#myAdmin';
-            url = baseUrl + '/plainOrders';
+            url = baseUrl + '/plainOrders/q=All/p=1';
 
             e.stopPropagation();
             Backbone.history.fragment = '';

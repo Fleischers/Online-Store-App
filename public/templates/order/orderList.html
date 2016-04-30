@@ -10,10 +10,10 @@
     </div>
 
     <ul class="nav nav-tabs" id="menu">
-        <li role="presentation" class="active"><a href="#myAdmin/orders">All</a></li>
-        <li role="presentation"><a href="#myAdmin/orders/q=Placed">Placed</a></li>
-        <li role="presentation"><a href="#myAdmin/orders/q=Fulfilled">Fulfilled</a></li>
-        <li role="presentation"><a href="#myAdmin/orders/q=Abandoned">Abandoned</a></li>
+        <li role="presentation" class="All"><a>All</a></li>
+        <li role="presentation" class="Placed"><a>Placed</a></li>
+        <li role="presentation" class="Fulfilled"><a>Fulfilled</a></li>
+        <li role="presentation" class="Abandoned"><a>Abandoned</a></li>
     </ul>
     <div class="row">
         <div class="table-responsive">
@@ -36,6 +36,17 @@
                 <%})%>
             </table>
         </div>
+    </div>
+    <div class="row" align="center">
+        <nav>
+            <ul class="pagination" id="pagination">
+                <% if(pages){pages.forEach(function(item){ %>
+                <li class="" id="page" data-id="<%=item%>">
+                    <a><%=item%></a>
+                </li>
+                <%})}%>
+            </ul>
+        </nav>
     </div>
 </div>
 
