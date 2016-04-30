@@ -7,21 +7,21 @@ define([
         view: null,
 
         routes: {
-            'myApp'                                           : 'homepageRouter',
+            'myApp'                                                   : 'homepageRouter',
             /*'myApp/chat'                                      : 'chatRouter',*/
-            'myApp/cart'                                      : 'cartRouter',
-            'myApp/forgotPass'                                : 'forgotPassRouter',
-            'myApp/resetPass/:token'                          : 'resetPassRouter',
-            'myApp/:content(/q=:query)(/p=:page)(/c=:count)'  : 'storeContentRouter',
-            'myApp/:content/:id'                              : 'storeItemRouter',
-            'myApp/:content/account/:id'                      : 'userRouter',
-            'myApp/users/create'                              : 'usersCreationRouter',
-            'myAdmin'                                         : 'adminPageRouter',
+            'myApp/cart'                                              : 'cartRouter',
+            'myApp/forgotPass'                                        : 'forgotPassRouter',
+            'myApp/resetPass/:token'                                  : 'resetPassRouter',
+            'myApp/:content(/q=:query)(/s=:sort)(/p=:page)(/c=:count)': 'storeContentRouter',
+            'myApp/:content/:id'                                      : 'storeItemRouter',
+            'myApp/:content/account/:id'                              : 'userRouter',
+            'myApp/users/create'                                      : 'usersCreationRouter',
+            'myAdmin'                                                 : 'adminPageRouter',
             /* 'myAdmin/logchat'                                 : 'logChatRouter',
              'myAdmin/chat'                                    : 'adminChatRouter',*/
-            'myAdmin/:content(/q=:query)(/p=:page)(/c=:count)': 'adminContentRouter',
-            'myAdmin/:content/create'                         : 'creationRouter',
-            'myAdmin/:content/:id'                            : 'itemRouter'
+            'myAdmin/:content(/q=:query)(/p=:page)(/c=:count)'        : 'adminContentRouter',
+            'myAdmin/:content/create'                                 : 'creationRouter',
+            'myAdmin/:content/:id'                                    : 'itemRouter'
         },
 
         initialize: function (options) {
@@ -121,7 +121,7 @@ define([
             });
         },
 
-        storeContentRouter: function (content, query, page, count) {
+        storeContentRouter: function (content, query, sort, page, count) {
             var self;
             var viewUrl;
             var collectionUrl;
@@ -165,6 +165,7 @@ define([
                 var pageCount;
 
                 query = query || '';
+                sort = sort || '';
                 page = page || 1;
                 count = count || 2;
 
@@ -173,7 +174,8 @@ define([
                     data : {
                         page  : page,
                         count : count,
-                        filter: query
+                        filter: query,
+                        sort: sort
                     }
                 });
 

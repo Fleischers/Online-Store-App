@@ -50,10 +50,11 @@ module.exports = function () {
     };
 
     this.fetch = function (req, res, next) {
+        var sort;
         query = req.query.filter;
+        sort=req.query.sort;
         paginate = req.query.count;
         page = req.query.page;
-
         if (query) {
             if(validator.isMongoId(query)){
                 filter = {categories: query}
@@ -63,6 +64,18 @@ module.exports = function () {
             }
         } else {
             filter = {}
+        }
+        if(sort){
+            var index=sort.indexOf(':');
+            var field=sort.substring(0,index);
+            var rule=sort.substring(index+1);
+            if(field=='name'){
+                sort={name: rule};
+            }else if(field=='price'){
+                sort={price: rule};
+            }else if(field=='created'){
+                sort={created: rule};
+            }
         }
 
         Product
@@ -77,6 +90,7 @@ module.exports = function () {
             })
             .skip((page - 1) * paginate)
             .limit(paginate)
+            .sort(sort)
             .exec(function (err, products) {
                 if (err) {
                     return next(err);

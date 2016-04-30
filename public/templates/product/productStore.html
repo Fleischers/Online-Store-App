@@ -16,9 +16,37 @@
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <% if(additionalCollection){additionalCollection.forEach(function(item){ %>
                     <li>
-                        <a id="categoryName"><%=item.name%></a>
+                        <a id="categoryName" data-id="<%=item._id%>"><%=item.name%></a>
                     </li>
                     <%})}%>
+                </ul>
+            </div>
+            <h1>  </h1>
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true" style="width:100%">
+                    <h5>#Sort: <span class="caret"></span></h5>
+
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li class="sort" >
+                        <a data-id="price:1">#Price - lower first</a>
+                    </li>
+                    <li class="sort" >
+                        <a data-id="price:-1">#Price - higher first</a>
+                    </li>
+                    <li class="sort" >
+                        <a data-id="name:1">#A-Z - lower first</a>
+                    </li>
+                    <li class="sort" >
+                        <a data-id="name:-1">#Z-A - higher first</a>
+                    </li>
+                    <li class="sort" >
+                        <a data-id="created:1">#Newer first</a>
+                    </li>
+                    <li class="sort" >
+                        <a data-id="created:-1">#Older first</a>
+                    </li>
                 </ul>
             </div>
         </div>

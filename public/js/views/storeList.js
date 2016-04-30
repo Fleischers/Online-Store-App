@@ -13,7 +13,8 @@ define([
         events    : {
             'click #product': 'onProduct',
             'click a#categoryName': 'onCategory',
-            'click li#page': 'onPage'
+            'click li#page': 'onPage',
+            'click li.sort': 'onSort'
         },
         initialize: function (opt) {
 
@@ -46,9 +47,9 @@ define([
 
             e.stopPropagation();
             $target=$(e.target);
-            categoryQuery=$target.html();
+            categoryQuery=$target.attr('data-id');
             Backbone.history.fragment='';
-            Backbone.history.navigate('#myApp/categories/q='+categoryQuery,{trigger: true});
+            Backbone.history.navigate('#myApp/products/q='+categoryQuery+'/p=1',{trigger: true});
         },
 
         onProduct : function (e) {
@@ -79,6 +80,26 @@ define([
             url=basicUrl.substring(0, basicUrl.length - 1);
             Backbone.history.navigate('#'+url+$page,{trigger: true});
 
+        },
+
+        onSort: function(e){
+            var $target;
+            var baseUrl;
+            var url;
+            var sortBy;
+            var index;
+            $target=$(e.target);
+            sortBy=$target.attr('data-id');
+            baseUrl=Backbone.history.fragment;
+            index=baseUrl.indexOf('s=');
+            if((index+1)==0){
+                url=baseUrl.substring(0, baseUrl.length - 3);
+            }else{
+                url=baseUrl.substring(0, index);
+            }
+            //console.log(baseUrl, index, url);
+            Backbone.history.fragment='';
+            Backbone.history.navigate('#'+url+'s='+sortBy+'/p=1',{trigger: true});
         },
 
         render: function () {
