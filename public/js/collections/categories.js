@@ -7,7 +7,7 @@ define([
         url  : '/categories/',
 
         initialize: function (options) {
-            this.on('add', function () {
+           /* this.on('add', function () {
                 console.log('Added one model');
             });
             this.on('change', function () {
@@ -21,7 +21,7 @@ define([
             });
             this.on('reset', function () {
                 console.log('Reset collection');
-            });
+            });*/
         }
     });
 

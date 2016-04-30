@@ -53,6 +53,15 @@ define([
         },
 
         render: function () {
+            $.ajax({
+                url    : 'isAuth',
+                success: function (params) {
+                    Backbone.history.navigate('#myApp/users/account'+params.id, {trigger: true});
+                },
+                error  : function (error) {
+                }
+            });
+
             this.$el.html(this.template());
         }
     });

@@ -23,13 +23,13 @@ define(['backbone'], function (Backbone) {
             return resp;
         },
 
-        /* validate: function (attrs) {
-         if (attrs.dateOfBirth) {
-         if ((Date.now() - attrs.birthday) < 567648000000) {
-         return 'This service is available only for > 18';
-         }
-         }
-         },*/
+        validate: function (attr) {
+            /* if (attrs.dateOfBirth) {
+             if ((Date.now() - attrs.birthday) < 567648000000) {
+             return 'This service is available only for > 18';
+             }
+             }*/
+        },
 
         urlRoot: function () {
             return '/users'

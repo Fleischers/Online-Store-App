@@ -63,7 +63,7 @@ define([
                 success: function (model) {
                     console.log('-- Removed ' + model.id + ' ----');
                     Backbone.history.fragment = '';
-                    Backbone.history.navigate('#myApp/users', {trigger: true});
+                    Backbone.history.navigate('#myApp', {trigger: true});
                 },
                 error  : function (model, xhr) {
                     alert(xhr.statusText);

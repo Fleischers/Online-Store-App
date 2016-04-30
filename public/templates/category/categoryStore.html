@@ -17,19 +17,18 @@
 
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a href="#myApp/products">All</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#myApp/categories/q=Music">Music</a></li>
-                    <li><a href="#myApp/categories/q=Clothes">Clothes</a></li>
-                    <li><a href="#myApp/categories/q=Other">Other</a></li>
-                    <li><a href="#myApp/categories/q=Sale!">SALE!</a></li>
+                    <% if(additionalCollection){additionalCollection.forEach(function(item){ %>
+                    <li>
+                        <a id="categoryName"><%=item.name%></a>
+                    </li>
+                    <%})}%>
                 </ul>
             </div>
         </div>
         <div class="col-lg-10 col-md-10">
             <% collection.forEach(function(item){ %>
             <% item.products.forEach(function(item){ %>
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" id="product">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="product">
                 <div class="thumbnail" id="<%=item._id%>">
                     <img src="<%=item.image%>" alt="">
                     <div class="caption">
@@ -41,6 +40,17 @@
             <%})%>
             <%})%>
         </div>
+    </div>
+    <div class="row" align="center">
+        <nav>
+            <ul class="pagination" id="pagination">
+                <% if(pages){pages.forEach(function(item){ %>
+                <li class="" id="page" data-id="<%=item%>">
+                    <a><%=item%></a>
+                </li>
+                <%})}%>
+            </ul>
+        </nav>
     </div>
 </div>
 

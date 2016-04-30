@@ -9,7 +9,7 @@ var handler = new ProductReviewHandler();
 
 router.param('id', handler.validateData);
 router.get('/', handler.fetch);
-router.post('/', handler.createProductReview, productHandler.updateProduct);
+router.post('/', handler.createProductReview,userHandler.updateUser, productHandler.updateProduct);
 router.get('/:id', handler.fetchById);
 router.put('/:id', handler.updateProductReview);
 router.delete('/:id', handler.deleteById);

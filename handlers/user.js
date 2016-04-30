@@ -1,9 +1,8 @@
-//var client = require('twilio')('AC7b8c6ffda04d01255382391a8ea23f79', 'ed01cd3197a279719df0d57241dfd908');
 var env = process.env;
 require('../config/' + env.NODE_ENV);
 var multiparty = require('multiparty');
 var validator = require('validator');
-var fs = require("fs");
+var fs = require('fs');
 var async = require('async');
 var crypto = require('crypto');
 var User = require('../models/user');
@@ -57,17 +56,27 @@ module.exports = function () {
             if (err) {
                 next(err);
             } else if (users) {
-                for (var any in users) {
-                }
-                if (users.hasOwnProperty(any)) {
+
+                if (Object.keys(users).length != 0) {
                     next();
                 } else {
-                    next(new HttpError(400, 'Failed to load user'));
+                    next(new HttpError(400, 'Empty user'));
                 }
+
             } else {
                 next(new HttpError(400, 'Failed to load user'));
             }
         });
+    };
+
+    this.countModels = function (req, res, next) {
+        User.count({}, function (err, count) {
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200).send({success: count});
+        })
     };
 
     this.fetch = function (req, res, next) {
@@ -224,7 +233,7 @@ module.exports = function () {
 
         body = req.body;
         orders = req.body.orders || [];
-        productReview = req.body.productReview || [];
+        productReview = req.body.productReviews || [];
         id = req.params.id;
         avatar = req.body.avatar;
         birthday = req.body.birthday;
@@ -283,8 +292,8 @@ module.exports = function () {
 
                         return next(err);
                     }
-
-                    res.status(200).send(users);
+                    req.params.id = req.body.product;
+                    next();
                 });
         } else {
             User
@@ -311,11 +320,16 @@ module.exports = function () {
                     return next(err);
                 }
 
-                res.status(200).send(users);
+                req.session.logged = false;
+                req.session._id = null;
+                req.body.ids = users.productReview;
+                next();
             })
     };
 
     this.logIn = function (req, res, next) {
+        var time;
+        var date = new Date();
         email = req.body.email;
         password = req.body.password;
         sms = req.body.sms;
@@ -334,6 +348,12 @@ module.exports = function () {
 
                     return next(err);
                 }
+            }
+
+            time = date - users.smsExpire;
+            console.log(time);
+            if (time > 60 * 1000) {
+                return next(new HttpError(403, 'Your sms expired')); //ERROR TIME
             }
 
             delete users.password;
@@ -452,7 +472,6 @@ module.exports = function () {
             }
             else {
 
-                //console.log("email is not verified");
                 res.end("<h1>Bad Request</h1>");
             }
         }
@@ -470,7 +489,10 @@ module.exports = function () {
         }
 
         rand = Math.floor((Math.random() * 10000000) + 787);
-        User.findOneAndUpdate({email: email}, {resetPassCode: rand}, {}, function (err, user) {
+        User.findOneAndUpdate({email: email}, {
+            resetPassCode      : rand,
+            resetPassCodeExpire: new Date()
+        }, {}, function (err, user) {
             if (err) {
                 return next(HttpError(400, 'Failed to load the user'));
             }
@@ -479,20 +501,20 @@ module.exports = function () {
             }
 
             toEmail = user.email;
-            smtpTransport = nodemailer.createTransport("SMTP", {
-                service: "Gmail",
+            smtpTransport = nodemailer.createTransport('SMTP', {
+                service: 'Gmail',
                 auth   : {
-                    user: "androsovani@gmail.com",
-                    pass: "thunderbird09"
+                    user: 'androsovani@gmail.com',
+                    pass: 'thunderbird09'
                 }
             });
 
             host = req.get('host');
-            link = "http://" + req.get('host') + "/#myApp/resetPass/" + rand;
+            link = 'http://' + host + "/users/resetPass/" + rand;
             mailOptions = {
                 to     : toEmail,
                 subject: 'Reset your password',
-                html   : 'Hello,<br> Please Click on the link to reset your email.<br><a href="' + link + '">Click here to reset</a>'
+                html   : 'Hello,<br> Please Click on the link to reset your password.<br><a href="' + link + '">Click here to reset</a>'
             };
 
             console.log(mailOptions);
@@ -510,22 +532,47 @@ module.exports = function () {
         });
     };
 
-    this.resetPass = function (req, res, next) {
+    this.confirmLink = function (req, res, next) {
+        var time;
+        var code = req.params.token;
+        var date = new Date();
 
-        console.log('resetPass');
+        console.log(code);
+        User.findOne({resetPassCode: code}, function (err, users) {
+            if (err) {
+                return next(err);
+            }
+
+            if (users == null) {
+                return next(err);
+            }
+            time = date - users.resetPassCodeExpire;
+            console.log(time);
+            if (time > 60 * 60 * 1000) {
+                return next(new HttpError(403, 'Your sms expired'));
+            }
+            res.redirect('http://localhost:3000/#myApp/resetPass/' + users.resetPassCode);
+        });
+    };
+
+    this.resetPass = function (req, res, next) {
+        code = req.body.resetPassCode;
         pass = req.body.pass;
+
         if (!pass) {
             throw new HttpError(400, 'There is no pass');
         }
-        code = req.body.resetPassCode;
+
         if (!code) {
             throw new HttpError(400, 'Empty code');
         }
 
         User.findOne({resetPassCode: code}, 'salt email', function (err, user) {
 
-            console.log(user);
-            console.log(user.encryptPassword(pass));
+            if (err) {
+
+                return next(err);
+            }
 
             User.findOneAndUpdate({email: user.email}, {
                 hashedPassword: user.encryptPassword(pass),
@@ -540,7 +587,6 @@ module.exports = function () {
                 res.status(200).send(users);
             });
         });
-
     };
 
     this.sendSms = function (req, res, next) {
@@ -579,6 +625,7 @@ module.exports = function () {
 
                     console.log(sms);
                     users.sms = sms;
+                    users.smsExpire = new Date();
                     users.save(function (err) {
                         if (err) {
                             return next(HttpError(400, 'You haven\'t put in email or password'));
@@ -587,7 +634,7 @@ module.exports = function () {
                         }
                     });
                 });
-                res.status(200).send({success: users});
+                res.status(200).send({success: users.phone});
             });
     }
 };

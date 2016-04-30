@@ -23,18 +23,18 @@ require.config({
         jStorage  : ['jQuery'],
         bootstrap : ['jQuery'],
         backbone  : ['underscore', 'jQuery'],
-        app       : ['bootstrap', 'backbone', 'jStorage', 'socket']
+        app       : ['bootstrap', 'backbone', 'jStorage'/*, 'socket'*/]
     }
 });
 
-require(['app', 'socket'], function (app, socket) {
-    var io = socket();
+require(['app'/*, 'socket'*/], function (app/*, socket*/) {
+    /*var io = socket();
 
     io.on('customSocket', function (data) {
         console.log(data);
 
         io.emit('response', '............. dcsd .........')
-    });
+    });*/
   /*  io.on('info',function(msg){
         console.log(msg)
     });

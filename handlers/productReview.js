@@ -93,13 +93,13 @@ module.exports = function () {
                     return next(err);
                 }
 
-                req.params.id = productReviews.product;
-                req.body.postedBy = productReviews.postedBy;
+                req.params.id = productReviews.postedBy;
+                req.body.product = productReviews.product;
                 req.body.productReviews = productReviews._id;
                 next();
             })
     };
-    
+
     this.updateProductReview = function (req, res, next) {
         body = req.body;
         id = req.params.id;
@@ -117,21 +117,21 @@ module.exports = function () {
     };
 
     this.deleteById = function (req, res, next) {
-        id = req.params.id;
+        var ids;
 
-        if (!validator.isMongoId(id)) {
-            return next(new HttpError(403, 'Invslid ID'));
+        ids = req.body.ids;
+        console.log(ids);
+        if (ids.length != 0) {
+            ids.forEach(function (item) {
+                ProductReview
+                    .findByIdAndRemove(item)
+                    .exec(function (err, productReviews) {
+                        if (err) {
+                            return next(err);
+                        }
+                    })
+            });
         }
-
-        ProductReview
-            .findByIdAndRemove(id)
-            .exec(function (err, productReviews) {
-                if (err) {
-
-                    return next(err);
-                }
-
-                res.status(200).send(productReviews);
-            })
+        res.status(200).send({success: 'success'})
     };
 };

@@ -1,10 +1,10 @@
 define([
     'backbone',
-    'models/product'], function (Backbone, Model) {
+    'models/user'], function (Backbone, Model) {
 
     var Collection = Backbone.Collection.extend({
         model: Model,
-        url  : '/products/',
+        url  : '/users/count',
 
         initialize: function (options) {
             /*this.on('add', function () {
@@ -22,8 +22,21 @@ define([
             this.on('reset', function () {
                 console.log('Reset collection');
             });*/
+
+            //this.fetch({
+            //    reset: true,
+            //    //data: {a: [10, 20], b: 20}, //will send as query params
+            //    success: function(model, xhr, options){
+            //        console.log('--- Fetched ----');
+            //    },
+            //    error: function(model, xhr, options) {
+            //        console.log('--- Fetched Error----')
+            //    }
+            //});
         }
     });
 
     return Collection;
 });
+
+

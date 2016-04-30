@@ -1,13 +1,13 @@
 define([
     'backbone',
-    'models/product'], function (Backbone, Model) {
+    'models/category'], function (Backbone, Model) {
 
     var Collection = Backbone.Collection.extend({
         model: Model,
-        url  : '/products/',
+        url  : '/categories/count',
 
         initialize: function (options) {
-            /*this.on('add', function () {
+           /* this.on('add', function () {
                 console.log('Added one model');
             });
             this.on('change', function () {

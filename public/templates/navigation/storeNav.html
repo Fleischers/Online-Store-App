@@ -26,14 +26,14 @@
                     <div class="col-lg-4 col-md-4" hidden></div>
                     <div class="col-lg-4 col-md-4" style="padding: 0px">
                         <ul class="list-inline">
-                            <li><a href="#myApp" id="gohome"><i class="fa fa-home fa-lg"></i></a></li>
-                            <li><a href="#myApp/users/create" id="user"><i class="fa fa-user fa-lg"></i></a></li>
+                            <li><a id="gohome"><i class="fa fa-home fa-lg"></i></a></li>
+                            <li><a id="user"><i class="fa fa-user fa-lg"></i></a></li>
                             <li><a id="chat"><i class="fa fa-weixin" aria-hidden="true"></i></a></li>
                         </ul>
                     </div>
                     <div class="col-lg-4 col-md-4" style="padding: 0px">
                         <li class="dropdown">
-                            <a href="#myApp/cart">Cart<i
+                            <a id="cart">Cart<i
                                     class="fa fa-shopping-basket fa-lg" style="margin-left: 6px"></i>
                             </a>
                         </li>
@@ -48,73 +48,28 @@
 </div>
 <div class="navbar navbar-default navbar-static-top">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggle" class="" data-toggle="collapse"
+        <button type="button" class="navbar-toggle" data-toggle="collapse"
                 data-target="#responsive-menu">
             <span class="sr-only">Open navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#myApp" id="home">LOGO</a>
+        <a class="navbar-brand" id="home">LOGO</a>
     </div>
     <div class="collapse navbar-collapse" id="responsive-menu">
         <ul class="nav navbar-nav">
-            <li><a href="#myApp/products">All products</a></li>
-            <li><a href="#myApp/categories/q=Music">Music</a></li>
+            <li><a id="products">All products</a></li>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown">Categories
                     <b class="caret"></b>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a href="#myApp/categories/q=Other">Other</a>
-                            <a href="#myApp/categories/q=Sale!">SALE!</a>
-                        </li>
+                        <% if(collection){collection.forEach(function(item){ %>
+                        <li><a id="categoryName" data-id="<%=item._id%>"><%=item.name%></a></li>
+                        <%})}%>
                     </ul>
                 </a>
             </li>
         </ul>
     </div>
 </div>
-<!--<div class="container-fluid">
-    <div class="row">
-        <div id="carousel" class="carousel slide">
-            <ol class="carousel-indicators">
-                <li class="active" data-target="#carousel" data-slide-to="0"></li>
-                <li data-target="#carousel" data-slide-to="1"></li>
-                <li data-target="#carousel" data-slide-to="2"></li>
-            </ol>
-
-            &lt;!&ndash;Слайды&ndash;&gt;
-            <div class="carousel-inner">
-                <div class="item active">
-                    <img src="images/0 (1).jpg" alt="">
-                    <div class="carousel-caption hidden">
-                        <h3>First slide</h3>
-                        <p>First slide description</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <img src="images/0 (2).jpg" alt="">
-                    <div class="carousel-caption hidden">
-                        <h3>Second slide</h3>
-                        <p>Second slide description</p>
-                    </div>
-                </div>
-                <div class="item">
-                    <img src="images/0 (3).jpg" alt="">
-                    <div class="carousel-caption hidden">
-                        <h3>Third slide</h3>
-                        <p>Third slide description</p>
-                    </div>
-                </div>
-            </div>
-            &lt;!&ndash;Стрелки переключения слайдов&ndash;&gt;
-            <a href="#carousel" class="left carousel-control" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left"></span>
-            </a>
-            <a href="#carousel" class="right carousel-control" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right"></span>
-            </a>
-        </div>
-    </div>
-</div>-->

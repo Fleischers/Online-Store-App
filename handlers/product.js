@@ -55,8 +55,12 @@ module.exports = function () {
         page = req.query.page;
 
         if (query) {
-            regex = new RegExp(query, "i");
-            filter = {name: regex}
+            if(validator.isMongoId(query)){
+                filter = {categories: query}
+            }else{
+                regex = new RegExp(query, "i");
+                filter = {name: regex}
+            }
         } else {
             filter = {}
         }
@@ -77,8 +81,32 @@ module.exports = function () {
                 if (err) {
                     return next(err);
                 }
+
                 res.status(200).send(products);
             })
+    };
+
+    this.countModels = function (req, res, next) {
+        query = req.query.filter;
+
+        if (query) {
+            if(validator.isMongoId(query)){
+                filter = {categories: query}
+            }else{
+                regex = new RegExp(query, "i");
+                filter = {name: regex}
+            }
+        } else {
+            filter = {}
+        }
+
+        Product.count(filter, function (err, count) {
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200).send({success: count});
+        })
     };
 
     // ToDo: при deepPopulate вываливается куча ненужной инфы, нужно придумать как ее убрать
@@ -182,7 +210,6 @@ module.exports = function () {
         productReviews = body.productReviews;
         image = body.image;
         categories = req.body.categories;
-
         if (image) {
             Product.findByIdAndUpdate(id, {$set: {image: image}})
                 .exec(function (err, products) {

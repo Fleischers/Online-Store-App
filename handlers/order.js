@@ -41,6 +41,16 @@ module.exports = function () {
         });
     };
 
+    this.countModels = function (req, res, next) {
+        Order.count({}, function (err, count) {
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200).send({success: count});
+        })
+    };
+
     // ToDo: отображение продуктов и информации о клиенте
     // ОДНОВРЕМЕННО на запроc "?expand=products&expand=customerInfo"
     // разобраться почему не работает "?expand=products" так как нужно

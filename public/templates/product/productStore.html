@@ -8,23 +8,23 @@
     <div class="row">
         <div class="col-lg-2 col-md-2">
             <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width:100%">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="true" style="width:100%">
                     <h5>#Select category: <span class="caret"></span></h5>
 
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a href="#myApp/products">All</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#myApp/categories/q=Music">Music</a></li>
-                    <li><a href="#myApp/categories/q=Clothes">Clothes</a></li>
-                    <li><a href="#myApp/categories/q=Other">Other</a></li>
-                    <li><a href="#myApp/categories/q=Sale!">SALE!</a></li>
+                    <% if(additionalCollection){additionalCollection.forEach(function(item){ %>
+                    <li>
+                        <a id="categoryName"><%=item.name%></a>
+                    </li>
+                    <%})}%>
                 </ul>
             </div>
         </div>
         <div class="col-lg-10 col-md-10">
             <% collection.forEach(function(model){ %>
-            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5" id="product">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="product">
                 <div class="thumbnail" id="<%=model._id%>">
                     <img src="<%=model.image%>" alt="">
                     <div class="caption">
@@ -38,22 +38,12 @@
     </div>
     <div class="row" align="center">
         <nav>
-            <ul class="pagination">
-                <li>
-                    <a href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
+            <ul class="pagination" id="pagination">
+                <% if(pages){pages.forEach(function(item){ %>
+                <li class="" id="page" data-id="<%=item%>">
+                    <a><%=item%></a>
                 </li>
-                <li><a href="#myApp/products/p=1">1</a></li>
-                <li><a href="#myApp/products/p=2">2</a></li>
-                <li><a href="#myApp/products/p=3">3</a></li>
-                <li><a href="#myApp/products/p=4">4</a></li>
-                <li><a href="#myApp/products/p=5">5</a></li>
-                <li>
-                    <a href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
+                <%})}%>
             </ul>
         </nav>
     </div>

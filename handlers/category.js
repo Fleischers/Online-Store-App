@@ -50,6 +50,16 @@ module.exports = function () {
         });
     };
 
+    this.countModels = function (req, res, next) {
+        Category.count({}, function (err, count) {
+            if (err) {
+                return next(err);
+            }
+
+            res.status(200).send({success: count});
+        })
+    };
+
     this.fetch = function (req, res, next) {
         query = req.query.filter;
         paginate = req.query.count;

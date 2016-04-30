@@ -4,7 +4,7 @@ define([
 
     var Collection = Backbone.Collection.extend({
         model: Model,
-        url  : '/products/',
+        url  : '/products/count',
 
         initialize: function (options) {
             /*this.on('add', function () {

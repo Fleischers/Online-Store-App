@@ -6,6 +6,7 @@ var userHandler = new UserHandler();
 var handler = new OrderHandler();
 
 router.get('/', handler.fetch);
+router.get('/count', handler.countModels);
 router.param('id', handler.validateData);
 router.post('/', handler.createOrder, handler.totalPrice, handler.updateOrder, userHandler.updateUser);
 router.get('/:id', handler.fetchById);

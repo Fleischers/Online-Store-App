@@ -69,6 +69,8 @@ var UserSchema = new Schema({
         type   : Number,
         expires: 60 * 60
     },
+    smsExpire: {type: Date},
+    resetPassCodeExpire: {type: Date}
 });
 
 UserSchema.plugin(deepPopulate);
@@ -151,7 +153,9 @@ UserSchema.statics.authorize = function (firstname, lastname, email, password, p
                     phone    : phone
                 });
                 user.save(function (err) {
-                    if (err) return next(err);
+                    if (err) {
+                        return next(err);
+                    }
                     callback(null, user);
                 });
             }

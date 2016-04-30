@@ -6,6 +6,7 @@ var productHandler = new ProductHandler();
 var handler = new CategoryHandler();
 
 router.get('/', handler.fetch);
+router.get('/count', handler.countModels);
 router.param('id', handler.validateData);
 router.post('/', handler.createCategory);
 router.get('/:id', handler.fetchById);

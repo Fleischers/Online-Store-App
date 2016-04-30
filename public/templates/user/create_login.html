@@ -1,7 +1,30 @@
+<div class="container" id="chose">
+    <div>
+        <h2 align="center"></h2>
+        <div class="col-lg-6 col-md-6">
+            <div class="form-group">
+                <form class="login-form">
+                    <button class="btn btn-default" type="button" id="intoLogin">
+                        Log In
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6">
+        <div class="form-group">
+            <form class="login-form">
+                <button class="btn btn-default" type="button" id="intoReg">
+                    Create new user
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <div class="row" style="height: 580px">
-        <div class="col-lg-6">
-
+        <div id="logForm" class="col-lg-6" hidden>
             <div class="form-group">
                 <form class="login-form">
                     <h2>
@@ -14,18 +37,17 @@
                     <h3>
                         <small>Password</small>
                     </h3>
-                    <input class="form-control" type="text" id="logInPass">
+                    <input class="form-control" type="password" id="logInPass">
 
                     <div id="sms" hidden>
                         <h3>
-                            <small>SMS Code</small>
+                            <small>Code</small>
                         </h3>
                         <input class="form-control" type="text" id="receivedCode">
                     </div>
 
-
                     <h4 style="margin-top: 25px;">
-                        <small><a href="#myApp/forgotPass">Forgot your password?</a></small>
+                        <small><a id="forgotPass">Forgot your password?</a></small>
                     </h4>
 
                     <div class="form-group">
@@ -42,8 +64,7 @@
                 </form>
             </div>
         </div>
-
-        <div class="col-lg-6">
+        <div class="col-lg-6" id="regForm" hidden>
             <form class="login-form">
                 <div class="form-group">
                     <h2>
@@ -68,7 +89,7 @@
                     <h3>
                         <small>Password</small>
                     </h3>
-                    <input class="form-control" type="text" id="password">
+                    <input class="form-control" type="password" id="password">
                     <h4 style="margin-top: 25px;">
                         <small>Push the button</small>
                     </h4>

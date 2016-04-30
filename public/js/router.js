@@ -8,17 +8,17 @@ define([
 
         routes: {
             'myApp'                                           : 'homepageRouter',
-            'myApp/chat'                                      : 'chatRouter',
+            /*'myApp/chat'                                      : 'chatRouter',*/
             'myApp/cart'                                      : 'cartRouter',
             'myApp/forgotPass'                                : 'forgotPassRouter',
-            'myApp/resetPass/:id'                             : 'resetPassRouter',
+            'myApp/resetPass/:token'                          : 'resetPassRouter',
             'myApp/:content(/q=:query)(/p=:page)(/c=:count)'  : 'storeContentRouter',
             'myApp/:content/:id'                              : 'storeItemRouter',
             'myApp/:content/account/:id'                      : 'userRouter',
             'myApp/users/create'                              : 'usersCreationRouter',
             'myAdmin'                                         : 'adminPageRouter',
-            'myAdmin/logchat'                                 : 'logChatRouter',
-            'myAdmin/chat'                                    : 'adminChatRouter',
+            /* 'myAdmin/logchat'                                 : 'logChatRouter',
+             'myAdmin/chat'                                    : 'adminChatRouter',*/
             'myAdmin/:content(/q=:query)(/p=:page)(/c=:count)': 'adminContentRouter',
             'myAdmin/:content/create'                         : 'creationRouter',
             'myAdmin/:content/:id'                            : 'itemRouter'
@@ -32,24 +32,22 @@ define([
             });
         },
 
-        chatRouter: function () {
-            this.pageRouter.call();
-            var self;
-            var viewUrl;
+        /*chatRouter: function () {
+         this.pageRouter.call();
+         var self;
+         var viewUrl;
 
+         self = this;
+         viewUrl = 'views/chat/chat';
 
+         require([viewUrl], function (CreateView) {
+         if (self.view) {
+         self.view.undelegateEvents();
+         }
 
-            self = this;
-            viewUrl = 'views/chat/chat';
-
-            require([viewUrl], function (CreateView) {
-                if (self.view) {
-                    self.view.undelegateEvents();
-                }
-
-                self.view = new CreateView({channel: self.channel});
-            })
-        },
+         self.view = new CreateView({channel: self.channel});
+         })
+         },*/
 
         cartRouter: function () {
             this.pageRouter.call();
@@ -70,39 +68,39 @@ define([
             });
         },
 
-        logChatRouter: function () {
-            var self;
-            var viewUrl;
-            this.adminRouter.call();
+        /*  logChatRouter: function () {
+         var self;
+         var viewUrl;
+         this.adminRouter.call();
 
-            self = this;
-            viewUrl = 'views/chat/login';
+         self = this;
+         viewUrl = 'views/chat/login';
 
-            require([viewUrl], function (CreateView) {
-                if (self.view) {
-                    self.view.undelegateEvents();
-                }
+         require([viewUrl], function (CreateView) {
+         if (self.view) {
+         self.view.undelegateEvents();
+         }
 
-                self.view = new CreateView({channel: self.channel});
-            })
-        },
+         self.view = new CreateView({channel: self.channel});
+         })
+         },*/
 
-        adminChatRouter: function () {
-            var self;
-            var viewUrl;
-            this.adminRouter.call();
+        /* adminChatRouter: function () {
+         var self;
+         var viewUrl;
+         this.adminRouter.call();
 
-            self = this;
-            viewUrl = 'views/chat/adchat';
+         self = this;
+         viewUrl = 'views/chat/adchat';
 
-            require([viewUrl], function (CreateView) {
-                if (self.view) {
-                    self.view.undelegateEvents();
-                }
+         require([viewUrl], function (CreateView) {
+         if (self.view) {
+         self.view.undelegateEvents();
+         }
 
-                self.view = new CreateView({channel: self.channel});
-            })
-        },
+         self.view = new CreateView({channel: self.channel});
+         })
+         },*/
 
         homepageRouter: function () {
             var self;
@@ -127,14 +125,21 @@ define([
             var self;
             var viewUrl;
             var collectionUrl;
+            var collection;
+            var num;
+            var pageCount;
+            var countUrl;
             this.pageRouter.call();
 
             self = this;
             collectionUrl = 'collections/' + content;
+            countUrl = 'collections/' + content + 'Count';
             viewUrl = 'views/' + content + '/listStore';
 
             function viewCreator() {
-                collection = this;
+                collection = this[0];
+                pageCount = this[1];
+                page = this[2];
 
                 require([
                     viewUrl
@@ -144,19 +149,24 @@ define([
                     }
                     self.view = new View({
                         collection: collection,
+                        pageCount : pageCount,
+                        page      : page,
                         channel   : self.channel
                     });
                 });
             }
 
             require([
-                collectionUrl
-            ], function (Collection) {
+                collectionUrl, countUrl
+            ], function (Collection, Count) {
                 var collection = new Collection();
+                var numbers = new Count();
+                var num;
+                var pageCount;
 
                 query = query || '';
                 page = page || 1;
-                count = count || 12;
+                count = count || 2;
 
                 collection.fetch({
                     reset: true,
@@ -166,7 +176,20 @@ define([
                         filter: query
                     }
                 });
-                collection.on('reset', viewCreator, collection)
+
+                numbers.fetch({
+                    async: false,
+                    reset: true,
+                    data : {
+                        filter: query
+                    }
+                }).done(function (result) {
+                    num = result.success;
+                    return num;
+                });
+
+                pageCount = Math.ceil(num / count);
+                collection.on('reset', viewCreator, [collection, pageCount, page])
             });
         },
 

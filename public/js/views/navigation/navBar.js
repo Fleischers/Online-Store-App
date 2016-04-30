@@ -2,8 +2,9 @@ define([
     'backbone',
     'underscore',
     'text!templates/navigation/storeNav.html',
-    'views/navigation/footer'
-], function (Backbone, _, navTemplate, Subview) {
+    'views/navigation/footer',
+    'collections/categories'
+], function (Backbone, _, navTemplate, Subview, Categories) {
     var $searchFor;
 
     return Backbone.View.extend({
@@ -11,11 +12,14 @@ define([
         el: '#container-nav',
 
         events: {
-            'click a#user'   : 'onUserPage',
-            'click a#home'   : 'onHome',
-            'click a#gohome' : 'onHome',
-            'click a#chat'   : 'onChat',
-            'click li#search': 'onSearch'
+            'click a#user'         : 'onUserPage',
+            'click a#home'         : 'onHome',
+            'click a#gohome'       : 'onHome',
+            'click a#chat'         : 'onChat',
+            'click a#cart'         : 'onCart',
+            'click a#products'     : 'onProducts',
+            'click li#search'      : 'onSearch',
+            'click a#categoryName': 'onCategory'
         },
 
         template: _.template(navTemplate),
@@ -23,11 +27,47 @@ define([
         subview: new Subview(),
 
         initialize: function (opt) {
+            var collection;
+            var self = this;
             this.channel = opt.channel;
+
+            this.collection = new Categories();
+            collection = this.collection;
+            collection.fetch({
+                success: function (models) {
+                    url = models.urlRoot + '/' + models.id;
+                    self.render();
+                },
+                error  : function (model, xhr) {
+                    alert(xhr.statusText);
+                }
+            });
+
             this.render();
         },
 
-        onChat:function(e){
+        onCategory: function (e){
+            var $target;
+            var categoryQuery;
+
+            e.stopPropagation();
+            $target=$(e.target);
+            categoryQuery=$target.attr('data-id');
+            Backbone.history.fragment='';
+            Backbone.history.navigate('#myApp/products/q='+categoryQuery+'/p=1',{trigger: true});
+        },
+
+        onProducts: function (e) {
+            Backbone.history.fragment = '';
+            Backbone.history.navigate('#myApp/products/p=1', {trigger: true});
+        },
+
+        onCart: function (e) {
+            Backbone.history.fragment = '';
+            Backbone.history.navigate('#myApp/cart', {trigger: true});
+        },
+
+        onChat: function (e) {
             Backbone.history.fragment = '';
             Backbone.history.navigate('#myApp/chat', {trigger: true});
         },
@@ -38,7 +78,7 @@ define([
                 alert('Type something!');
             } else {
                 Backbone.history.fragment = '';
-                Backbone.history.navigate('#myApp/products/q=' + $searchFor, {trigger: true});
+                Backbone.history.navigate('#myApp/products/q=' + $searchFor+'/p=1', {trigger: true});
             }
         },
 
@@ -54,10 +94,11 @@ define([
         },
 
         render: function () {
-
+            var collection;
+            collection = this.collection.toJSON();
             // this.subview.render();
             // this.subview.delegateEvents();
-            this.$el.html(this.template());
+            this.$el.html(this.template({collection: collection}));
         }
     });
 });

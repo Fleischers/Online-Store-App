@@ -8,7 +8,7 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index');
-var Chat = require('./chat');
+/*var Chat = require('./chat');*/
 var env = process.env;
 var db;
 require('./config/' + env.NODE_ENV);
@@ -31,10 +31,10 @@ db.once('connected', function () {
 
     console.log('==== Connected to DB ====');
     app = express();
-    server=http.createServer(app);
+    server = http.createServer(app);
 
-    var chat = new Chat(server);
-    chat.init();
+    /*var chat = new Chat(server);
+     chat.init();*/
 
     app.use(express.static(path.join(__dirname, 'public')));
 
@@ -51,6 +51,7 @@ db.once('connected', function () {
         name             : 'online_store',
         key              : "superSecretKey",
         secret           : '1q2w3e4r5tdhgkdfhgejflkejgkdlgh8j0jge4547hh',
+        cookie           : {maxAge: 24*60*60*1000},
         resave           : false,
         saveUninitialized: false,
         store            : new MongoStore(sessionConfig)
@@ -58,7 +59,7 @@ db.once('connected', function () {
 
     routes(app);
 
-    server.listen(env.PORT || 3000, function() {
+    server.listen(env.PORT || 3000, function () {
         console.log('==== Server started ====');
     })
 });

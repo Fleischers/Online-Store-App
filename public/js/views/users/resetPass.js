@@ -21,7 +21,17 @@ define([
         initialize: function (opt) {
             this.channel = opt.channel;
             this.id = opt.id;
-            console.log('content initialized');
+            console.log(opt.id);
+            $.ajax({
+                url    : 'users/resetPass/'+opt.id,
+                success: function (params) {
+                    console.log(params)
+                },
+                error  : function (error) {
+                    Backbone.history.navigate('#myApp/users/create', {trigger: true});
+                }
+            });
+
             this.render();
         },
 
@@ -43,16 +53,12 @@ define([
                 resetPassCode: this.id
             });
 
-            this.model.urlRoot = '/users/resetPass';
+            this.model.urlRoot = '/users/resetPass/'+this.id;
 
             this.model.save(null, {
                 wait    : true,
                 validate: false,
                 success : function (model) {
-
-                    //console.log(model);
-                    //console.log(model.attributes.success);
-                    //console.log('-- LoggedIn with id' + model.attributes.success + ' ----');
                     Backbone.history.navigate('#myApp', {trigger: true});
                 },
                 error   : function (model, xhr) {
@@ -62,6 +68,16 @@ define([
         },
 
         render: function () {
+
+            $.ajax({
+                url    : 'isAuth',
+                success: function (params) {
+                    Backbone.history.navigate('#myApp/users/account'+params.id, {trigger: true});
+                },
+                error  : function (error) {
+                }
+            });
+
             this.$el.html(this.template());
         }
     });
