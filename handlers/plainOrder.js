@@ -1,6 +1,7 @@
 var validator = require('validator');
 var fs = require("fs");
 var HttpError = require('./customError').HttpError;
+var PlainOrder = require('../models/plainOrder');
 var Order = require('../models/order');
 
 module.exports = function () {
@@ -26,17 +27,8 @@ module.exports = function () {
         Order.find({_id: id}, function (err, orders) {
             if (err) {
                 next(err);
-            } else if (orders) {
-                for (var any in orders) {
-                }
-                if (orders.hasOwnProperty(any)) {
-                    next();
-                } else {
-                    next(new HttpError(400, 'Failed to load user'));
-                }
-            } else {
-                next(new HttpError(400, 'Failed to load user'));
             }
+            next();
         });
     };
 
@@ -54,7 +46,7 @@ module.exports = function () {
     // ОДНОВРЕМЕННО на запроc "?expand=products&expand=customerInfo"
     // разобраться почему не работает "?expand=products" так как нужно
     // скрыть из customerInfo и products ненужные поля
-   /* this.fetch = function (req, res, next) {
+    this.fetch = function (req, res, next) {
         query = req.query.filter;
         paginate = req.query.count;
         page = req.query.page;
@@ -65,7 +57,7 @@ module.exports = function () {
             filter = {}
         }
 
-        /!* var dbQuery;
+        /* var dbQuery;
          var query = req.query;
          var aggregateObject = [];
          var expandBy;
@@ -167,18 +159,8 @@ module.exports = function () {
          }
 
          res.status(200).send(orders);
-         });*!/
-        Order.find(filter, {__v: 0})
-            .populate({
-                path  : 'products',
-                select: 'name price image'
-            })
-            .populate({
-                path  : 'customerInfo',
-                select: 'firstName lastName email phone address avatar'
-            })
-            .skip((page - 1) * paginate)
-            .limit(paginate)
+         });*/
+        PlainOrder.find(filter, {__v: 0})
             .exec(function (err, orders) {
                 if (err) {
 
@@ -192,8 +174,27 @@ module.exports = function () {
     this.fetchById = function (req, res, next) {
         id = req.params.id;
 
-        Order
+        PlainOrder
             .findById(id, {
+                __v: 0
+            })
+            .exec(function (err, orders) {
+                if (err) {
+
+                    return next(err);
+                }
+
+                res.status(200).send(orders);
+            })
+    };
+
+    this.createOrder = function (req, res, next) {
+        var id = req.body.orders;
+        var order;
+        var plainOrder;
+
+        plainOrder = new PlainOrder();
+        order = Order.findById(id, {
                 __v    : 0,
                 created: 0
             })
@@ -211,78 +212,55 @@ module.exports = function () {
                     return next(err);
                 }
 
-                res.status(200).send(orders);
-            })
-    };*/
+                plainOrder.set({
+                        products     : orders.products,
+                        itemsQuantity: orders.itemsQuantity,
+                        totalPrice   : orders.totalPrice,
+                        customerInfo : orders.customerInfo
+                    }).save(function (err, orders) {
+                            if (err) {
 
-    this.createOrder = function (req, res, next) {
-        itemsQuantity = req.body.itemsQuantity;
-        products = req.body.products;
-        customerInfo = req.body.customerInfo;
+                                return next(err);
+                            }
 
-        if ((!((products) instanceof Array)) && (!((itemsQuantity) instanceof Array))) {
-            products = (products).split(',');
-            itemsQuantity = (itemsQuantity).split(',')
-        }
+                            Order
+                                .findByIdAndRemove(id)
+                                .exec(function (err, orders) {
+                                    if (err) {
 
-        order = new Order();
-        order.set({
-                products     : products,
-                itemsQuantity: itemsQuantity,
-                customerInfo : customerInfo
-            })
-            .save(function (err, orders) {
-                    if (err) {
+                                        return next(err);
+                                    }
+                                    console.log('removed ' + orders._id);
+                                });
 
-                        return next(err);
-                    }
-                    console.log('order created with id ' + orders._id);
-                    req.params.id = orders._id;
-                    next();
-                }
-            )
+                            req.params.id = req.body.customerInfo;
+                            req.body.orders = orders._id;
+                            next();
+                        }
+                    )
+            });
+
     };
 
-    this.totalPrice = function (req, res, next) {
-        id = req.params.id;
-        total = 0;
-
-        Order.findById(id)
-            .populate('products', 'price')
-            .exec(function (err, orders) {
-
-                if (err) {
-                    return next(err);
-                }
-
-                for (var i = 0; i < (orders.itemsQuantity.length); i++) {
-                    total += (orders.itemsQuantity[i]) * (orders.products[i].price);
-                }
-
-                req.params.id = orders._id;
-                req.body.totalPrice = total.toFixed(2);
-                next();
-            })
-    };
 
     this.updateOrder = function (req, res, next) {
+        var comment;
+        var status;
+
+    };
+
+    this.deleteById = function (req, res, next) {
         id = req.params.id;
-        totalPrice = req.body.totalPrice;
 
-        if ((typeof id) != String) {
-            id = id.toString();
-        }
-
-        Order
-            .findByIdAndUpdate(id, {$set: {totalPrice: totalPrice}})
+        PlainOrder
+            .findByIdAndRemove(id)
             .exec(function (err, orders) {
                 if (err) {
 
                     return next(err);
                 }
 
-                req.body.orders = orders._id;
-                next();
+                res.status(200).send(orders);
             })
     };
 };

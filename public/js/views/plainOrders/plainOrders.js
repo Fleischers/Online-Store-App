@@ -2,7 +2,7 @@ define([
     'backbone',
     'underscore',
     'text!templates/order/order.html',
-    'models/order'
+    'models/plainOrder'
     /*'ENTER_KEY'*/
 ], function (Backbone, _, orderTemplate, Order) {
     var self;
@@ -24,8 +24,8 @@ define([
 
             this.model = new Order({_id: opt.id});
             this.model.fetch({
-                success: function (category) {
-                    url = category.urlRoot + '/' + category.id;
+                success: function (order) {
+                    url = order.urlRoot + '/' + order.id;
                     self.render();
                 },
                 error  : function () {
@@ -44,7 +44,7 @@ define([
                 success: function (model) {
                     alert('Order is fulfilled! Thank you!');
                     Backbone.history.fragment = '';
-                    Backbone.history.navigate('#myAdmin/orders', {trigger: true});
+                    Backbone.history.navigate('#myAdmin/plainOrders', {trigger: true});
                 },
                 error  : function (model, xhr) {
                     alert(xhr.statusText);

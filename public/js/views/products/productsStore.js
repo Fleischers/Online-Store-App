@@ -37,7 +37,6 @@ define([
         },
 
         initialize: function (opt) {
-            console.log(opt);
             var number;
             var page;
             var count;
@@ -89,65 +88,81 @@ define([
             var url;
             var basicUrl;
             var page;
+            var err;
+            err=[];
             page=this.pages;
-            console.log(page);
             $target = $(e.target);
             $thisEl = this.$el;
             description = $thisEl.find('#description').val();
             product = $target.attr('data-id');
 
-            $.ajax({
-                async  : false,
-                url    : 'isAuth',
-                success: function (params) {
-                    postedBy = params.success;
+            if ((description.search(/<html>/i) != -1) || (description.search(/<script>/i) != -1)) {
+                err.push('Don\'t even think to do smth like this')
+            }
 
-                    this.model = new Review({
-                        postedBy   : postedBy,
-                        description: description,
-                        product    : product
-                    });
+            if (description.trim().length === 0) {
+                err.push('This field can\'t be empty.');
+            }
 
-                    this.model.urlRoot = '/productReviews';
+            if (description.trim().length > 255) {
+                err.push('This field can\'t be such long.');
+            }
 
-                    this.model.save(null, {
-                        wait   : true,
-                        success: function (model) {
-                            alert('Review added');
-                            basicUrl = Backbone.history.fragment;
-                            url = basicUrl.substring(0, basicUrl.length - 1);
-                            Backbone.history.fragment = '';
-                            Backbone.history.navigate(url+page, {trigger: true})
-                        },
-                        error  : function (model, xhr) {
-                            alert(xhr.statusText);
-                        }
-                    });
-                },
-                error  : function (error) {
-                    alert('LogIn to add a review')
-                }
-            });
+            if(err.length==0){
+                $.ajax({
+                    async  : false,
+                    url    : 'isAuth',
+                    success: function (params) {
+                        postedBy = params.success;
+
+                        this.model = new Review({
+                            postedBy   : postedBy,
+                            description: description,
+                            product    : product
+                        });
+
+                        this.model.urlRoot = '/productReviews';
+
+                        this.model.save(null, {
+                            wait   : true,
+                            success: function (model) {
+                                alert('Review added');
+                                basicUrl = Backbone.history.fragment;
+                                url = basicUrl.substring(0, basicUrl.length - 1);
+                                Backbone.history.fragment = '';
+                                Backbone.history.navigate(url+page, {trigger: true})
+                            },
+                            error  : function (model, xhr) {
+                                alert(xhr.statusText);
+                            }
+                        });
+                    },
+                    error  : function (error) {
+                        alert('LogIn to add a review')
+                    }
+                });
+            }else {
+                err.forEach(function (item) {
+                    alert(item);
+                })
+            }
         },
 
         onAddToCart: function (e) {
             $target = $(e.target);
             id = $target.attr('data-id');
-            price = $('h3#price').attr('data-id');
+            //price = $('h3#price').attr('data-id');
             quantity = $('select#quantity option:selected').val();
 
             $.ajax({
                 url    : 'isAuth',
                 success: function (params) {
-                    userId = $.jStorage.set('userId', params.success);
                     prodArr = $.jStorage.get('productId') || [];
                     prodArr.push(id);
-                    priceArr = $.jStorage.get('prices') || [];
-                    priceArr.push(price);
                     quantityArr = $.jStorage.get('quantity') || [];
                     quantityArr.push(quantity);
+                    $.jStorage.set('userId', params.success);
                     $.jStorage.set('productId', prodArr);
-                    $.jStorage.set('prices', priceArr);
                     $.jStorage.set('quantity', quantityArr);
                 },
                 error  : function (error) {
@@ -184,7 +199,6 @@ define([
             var pages = this.pages;
             model = this.model.toJSON();
             collection = this.collection.toJSON();
-            console.log(pages);
 
             var pagesArr = [];
 

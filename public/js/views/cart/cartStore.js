@@ -2,7 +2,7 @@ define([
     'backbone',
     'underscore',
     'text!templates/order/create.html',
-    'models/order'
+    'models/plainOrder'
     /*'ENTER_KEY'*/
 ], function (Backbone, _, cartTemplate, Order) {
     var model;
@@ -47,28 +47,48 @@ define([
         },
 
         onPlaceOrder: function (e) {
+            var err;
+            err = [];
             $thisEl = this.$el;
             $comment = $thisEl.find('#comment').val();
 
-            model = this.model;
-            model.save({
-                comment: $comment,
-                status : 'Placed'
-            }, {
-                patch  : true,
-                wait   : true,
-                success: function (model) {
-                    alert('Your order was successfully saved! Thank you!');
-                    $.jStorage.flush('productId');
-                    $.jStorage.flush('prices');
-                    $.jStorage.flush('quantity');
-                    Backbone.history.fragment = '';
-                    Backbone.history.navigate('#myApp', {trigger: true});
-                },
-                error  : function (model, xhr) {
-                    alert(xhr.statusText);
-                }
-            });
+            if (($comment.search(/<html>/i) != -1) || (description.search(/<script>/i) != -1)) {
+                err.push('Don\'t even think to do smth like this')
+            }
+
+            if ($comment.trim().length === 0) {
+                err.push('This field can\'t be empty.');
+            }
+
+            if ($comment.trim().length > 255) {
+                err.push('This field can\'t be such long.');
+            }
+
+            if (err.length == 0) {
+                model = this.model;
+                model.save({
+                    comment: $comment,
+                    status : 'Placed'
+                }, {
+                    patch  : true,
+                    wait   : true,
+                    success: function (model) {
+                        alert('Your order was successfully saved! Thank you!');
+                        $.jStorage.flush('productId');
+                        $.jStorage.flush('prices');
+                        $.jStorage.flush('quantity');
+                        Backbone.history.fragment = '';
+                        Backbone.history.navigate('#myApp', {trigger: true});
+                    },
+                    error  : function (model, xhr) {
+                        alert(xhr.statusText);
+                    }
+                });
+            } else {
+                err.forEach(function (item) {
+                    alert(item);
+                })
+            }
         },
 
         render: function () {

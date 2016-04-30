@@ -35,6 +35,7 @@
         <div class="col-lg-4 col-md-4">
             <div class="table-responsive">
                 <table class="table">
+                    <% if(model.customerInfo){ %>
                     <tr>
                         <td><h4><strong>#Customer info: </strong></h4></td>
                         <td></td>
@@ -69,6 +70,7 @@
                             <h5><%=model.customerInfo[0].email%></h5>
                         </td>
                     </tr>
+                    <%}%>
                 </table>
             </div>
         </div>
