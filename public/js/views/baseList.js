@@ -20,14 +20,15 @@ define([
             'click #name'                  : 'onAccount',
             'click #removeBtn'             : 'onRemove',
             'click #product'               : 'onProduct',
-            'click li[role="presentation"]': 'onOrderByStatus'
+            'click li[role="presentation"]': 'onOrderByStatus',
+            'click li.sort': 'onSort'
         },
 
         initialize: function (opt) {
             this.query = opt.query;
             this.channel = opt.channel;
-            this.pageCount=opt.pageCount;
-            this.page=opt.page;
+            this.pageCount = opt.pageCount;
+            this.page = opt.page;
             console.log(opt);
             this.render();
         },
@@ -156,11 +157,34 @@ define([
             Backbone.history.navigate('#myAdmin/' + this.contentType + '/q=' + query + '/p=1', {trigger: true});
         },
 
+        onSort: function (e) {
+            var $target;
+            var baseUrl;
+            var url;
+            var sortBy;
+            var index;
+            $target = $(e.target);
+            sortBy = $target.attr('data-id');
+            baseUrl = Backbone.history.fragment;
+            index = baseUrl.indexOf('s=');
+            if ((index + 1) == 0) {
+                url = baseUrl.substring(0, baseUrl.length - 3);
+            } else {
+                url = baseUrl.substring(0, index);
+            }
+            console.log('#' + url + 's=' + sortBy + '/p=1');
+            Backbone.history.fragment = '';
+            Backbone.history.navigate('#' + url + 's=' + sortBy + '/p=1', {trigger: true});
+        },
+
         render: function () {
             var $thisEl;
             var $li;
+            var $sort;
+            var $td1;
+            var $td2;
             var pages = this.pageCount;
-            var pagesArr=[];
+            var pagesArr = [];
 
             for (var i = 0; i < pages; i++) {
                 pagesArr.push(i + 1);
@@ -187,9 +211,21 @@ define([
                 if ($li) {
                     $li.addClass('active')
                 }
+                if (this.query == 'Abandoned') {
+                    $td1 = $thisEl.find('td#recovery');
+                    $td2 = $thisEl.find('td#recoveryVal');
+                    $sort=$thisEl.find('li.sort');
+                    $sort.show();
+                    $td1.show();
+                    $td2.show();
+                }
             }
-            $li = $thisEl.find("[data-id='" + this.page + "']");
-            $li.addClass('active');
+
+            if ($thisEl) {
+                $thisEl = this.$el;
+                $li = $thisEl.find("[data-id='" + this.page + "']");
+                $li.addClass('active');
+            }
         }
     });
 });

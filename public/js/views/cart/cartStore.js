@@ -26,7 +26,6 @@ define([
             this.model = new Order({_id: opt.id});
             this.model.fetch({
                 success: function (order) {
-                    console.log(order);
                     var url = order.urlRoot + '/' + order.id;
                     self.render();
                 },
@@ -38,8 +37,8 @@ define([
 
         onCancelOrder: function (e) {
             e.stopPropagation();
+            $.jStorage.flush('customerInfo');
             $.jStorage.flush('productId');
-            $.jStorage.flush('prices');
             $.jStorage.flush('quantity');
 
             Backbone.history.fragment = '';
@@ -54,10 +53,6 @@ define([
 
             if (($comment.search(/<html>/i) != -1) || ($comment.search(/<script>/i) != -1)) {
                 err.push('Don\'t even think to do smth like this')
-            }
-
-            if ($comment.trim().length === 0) {
-                err.push('This field can\'t be empty.');
             }
 
             if ($comment.trim().length > 255) {

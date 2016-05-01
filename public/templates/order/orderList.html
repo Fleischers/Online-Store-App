@@ -1,10 +1,36 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2"><h3>Orders</h3></div>
-        <div class="col-md-9"></div>
-        <div class="col-md-1">
+        <div class="col-md-8"></div>
+        <div class="col-md-2">
             <h3>
-                <button type="button" class="btn btn-default" id="removeBtn">Delete</button>
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="true" style="width:100%">
+                        <h5>#Sort: <span class="caret"></span></h5>
+
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li class="sort">
+                            <a data-id="created:1">#Older first</a>
+                        </li>
+                        <li class="sort">
+                            <a data-id="created:-1">#Newer first</a>
+                        </li>
+                        <li class="sort">
+                            <a data-id="totalPrice:1">#Total Price - higher first</a>
+                        </li>
+                        <li class="sort">
+                            <a data-id="totalPrice:-1">#Total Price - lower first</a>
+                        </li>
+                        <li class="sort" hidden>
+                            <a data-id="emailSent:1">#Recovery - not sent</a>
+                        </li>
+                        <li class="sort" hidden>
+                            <a data-id="emailSent:-1">#Recovery - sent</a>
+                        </li>
+                    </ul>
+                </div>
             </h3>
         </div>
     </div>
@@ -24,14 +50,25 @@
                     <td><strong>#Placed by:</strong></td>
                     <td><strong>#Total price:</strong></td>
                     <td><strong>#Status:</strong></td>
+                    <td id="recovery" hidden align="center"><strong>#Recovery email:</strong></td>
                 </tr>
                 <% collection.forEach(function(model){ %>
                 <tr id="<%=model._id%>">
-                    <td><label><input type="checkbox" id="blankCheckbox" data-id="<%=model._id%>"></label></td>
+                    <td></td>
                     <td id="name"><%=model.created%></td>
                     <td><%=model.customerInfo[0].firstName%></td>
                     <td><%=model.totalPrice%>$</td>
                     <td><%=model.status%></td>
+                    <td id="recoveryVal" hidden align="center"><% if(model.emailSent==true){ %>
+                        <button type="button" class="btn btn-default" style="width: 40%">
+                            Email Sent
+                        </button>
+                        <%}else{%>
+                        <button type="button" class="btn btn-warning" style="width: 40%">
+                            Not Sent
+                        </button>
+                        <%}%>
+                    </td>
                 </tr>
                 <%})%>
             </table>

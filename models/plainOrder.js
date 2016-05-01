@@ -12,10 +12,10 @@ var PlainOrderSchema = new Schema({
     totalPrice   : {type: String},
     customerInfo : [{
         firstName: String,
-        lastName: String,
-        phone: String,
-        address: String,
-        email: String
+        lastName : String,
+        phone    : String,
+        address  : String,
+        email    : String
     }],
     created      : {
         type   : Date,
@@ -25,6 +25,10 @@ var PlainOrderSchema = new Schema({
     status       : {
         type   : String,
         default: 'Abandoned'
+    },
+    emailSent    : {
+        type   : Boolean,
+        default: false
     }
 });
 

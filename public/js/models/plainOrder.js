@@ -8,6 +8,8 @@ define(['backbone'], function (Backbone) {
         },
 
         parse: function (resp) {
+            var recovery=resp.emailSent;
+            var recStat;
             var date = new Date(resp.created);
             var options = {
                 year  : 'numeric',
@@ -18,7 +20,6 @@ define(['backbone'], function (Backbone) {
             };
             date = date.toLocaleString('en-US', options);
             resp.created = date;
-
             return resp;
         },
 

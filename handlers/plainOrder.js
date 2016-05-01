@@ -3,6 +3,7 @@ var fs = require("fs");
 var HttpError = require('./customError').HttpError;
 var PlainOrder = require('../models/plainOrder');
 var Order = require('../models/order');
+var nodemailer = require('nodemailer');
 
 module.exports = function () {
     var query;
@@ -34,9 +35,9 @@ module.exports = function () {
 
     this.countModels = function (req, res, next) {
         if (query) {
-            if(query=='All'){
-                filter={};
-            }else{
+            if (query == 'All') {
+                filter = {};
+            } else {
                 filter = {status: query};
             }
         } else {
@@ -57,19 +58,35 @@ module.exports = function () {
     // разобраться почему не работает "?expand=products" так как нужно
     // скрыть из customerInfo и products ненужные поля
     this.fetch = function (req, res, next) {
+        var sort;
+        sort=req.query.sort;
         query = req.query.filter;
         paginate = req.query.count;
         page = req.query.page;
 
         if (query) {
-            if(query=='All'){
-                filter={};
-            }else{
+            if (query == 'All') {
+                filter = {};
+            } else {
                 filter = {status: query};
             }
         } else {
             filter = {};
         }
+
+        if(sort){
+            var index=sort.indexOf(':');
+            var field=sort.substring(0,index);
+            var rule=sort.substring(index+1);
+            if(field=='totalPrice'){
+                sort={totalPrice: rule};
+            }else if(field=='created'){
+                sort={created: rule};
+            }else if(field=='emailSent'){
+                sort={emailSent: rule};
+            }
+        }
+
 
         /* var dbQuery;
          var query = req.query;
@@ -177,6 +194,7 @@ module.exports = function () {
         PlainOrder.find(filter, {__v: 0})
             .skip((page - 1) * paginate)
             .limit(paginate)
+            .sort(sort)
             .exec(function (err, orders) {
                 if (err) {
 
@@ -229,56 +247,104 @@ module.exports = function () {
                 }
 
                 plainOrder.set({
-                        products     : orders.products,
-                        itemsQuantity: orders.itemsQuantity,
-                        totalPrice   : orders.totalPrice,
-                        customerInfo : orders.customerInfo
-                    }).save(function (err, orders) {
-                            if (err) {
+                    products     : orders.products,
+                    itemsQuantity: orders.itemsQuantity,
+                    totalPrice   : orders.totalPrice,
+                    customerInfo : orders.customerInfo
+                }).save(function (err, orders) {
+                        if (err) {
 
-                                return next(err);
-                            }
-
-                            Order
-                                .findByIdAndRemove(id)
-                                .exec(function (err, orders) {
-                                    if (err) {
-
-                                        return next(err);
-                                    }
-                                    console.log('removed ' + orders._id);
-                                });
-
-                            req.params.id = req.body.customerInfo;
-                            req.body.orders = orders._id;
-                            next();
+                            return next(err);
                         }
-                    )
+
+                        Order
+                            .findByIdAndRemove(id)
+                            .exec(function (err, orders) {
+                                if (err) {
+
+                                    return next(err);
+                                }
+                                console.log('removed ' + orders._id);
+                            });
+
+                        req.params.id = req.body.customerInfo;
+                        req.body.orders = orders._id;
+                        next();
+                    }
+                )
             });
 
     };
-
 
     this.updateOrder = function (req, res, next) {
         var comment;
         var status;
         var id;
-        id=req.params.id;
-        comment=req.body.comment;
-        status=req.body.status;
-        console.log(req.params.id, req.body);
+        var toEmail;
+        var smtpTransport;
+        var mailOptions;
+        var host;
+        var firstName;
+        var link;
 
-        PlainOrder
-            .findByIdAndUpdate(id,{comment: comment, status: status})
-            .exec(function (err, orders) {
-                if (err) {
+        id = req.params.id;
+        comment = req.body.comment;
+        status = req.body.status;
+        console.log(comment, status);
 
-                    return next(err);
-                }
+        if (status == 'Recovery') {
+            PlainOrder
+                .findByIdAndUpdate(id, {emailSent: true})
+                .exec(function (err, orders) {
+                    if (err) {
 
-                res.status(200).send(orders);
-            })
+                        return next(err);
+                    }
+                    console.log(orders.customerInfo[0].email);
+                    toEmail = orders.customerInfo[0].email;
+                    firstName = orders.customerInfo[0].firstName;
+                    smtpTransport = nodemailer.createTransport("SMTP", {
+                        service: "Gmail",
+                        auth   : {
+                            user: "androsovani@gmail.com",
+                            pass: "thunderbird09"
+                        }
+                    });
 
+                    host = req.get('host');
+                    link = 'http://' + req.get('host') + '/#myApp/cart/' + id;
+                    mailOptions = {
+                        to     : toEmail,
+                        subject: 'Seems like you\'ve left smth behind',
+                        html   : 'Hello,' + firstName + '!<br> It\'s seems you have not placed your order<br>' + link
+                    };
+                    console.log(mailOptions);
+                    smtpTransport.sendMail(mailOptions, function (error, response) {
+                        if (error) {
+                            console.log(error);
+                            res.end("error");
+                        } else {
+                            console.log("Message sent: " + response.message);
+                        }
+                    });
+
+                    res.status(200).send(orders);
+                })
+        }else{
+            PlainOrder
+                .findByIdAndUpdate(id, {
+                    comment: comment,
+                    status : status
+                })
+                .exec(function (err, orders) {
+                    if (err) {
+
+                        return next(err);
+                    }
+
+                    res.status(200).send(orders);
+                })
+        }
     };
 
     this.deleteById = function (req, res, next) {
