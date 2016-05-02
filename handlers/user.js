@@ -80,23 +80,28 @@ module.exports = function () {
     };
 
     this.fetch = function (req, res, next) {
+        var sort;
+        var page;
+        var paginate;
+        sort = req.query.sort;
+        paginate = +req.query.count;
+        page = req.query.page;
+        if (sort) {
+            var index = sort.indexOf(':');
+            var field = sort.substring(0, index);
+            var rule = sort.substring(index + 1);
+            if (field == 'email') {
+                sort = {email: rule};
+            } else if (field == 'created') {
+                sort = {created: rule};
+            }
+        }
 
         User
-            .aggregate(
-                {
-                    $project: {
-                        firstName    : 1,
-                        lastName     : 1,
-                        email        : 1,
-                        address      : 1,
-                        phone        : 1,
-                        avatar       : 1,
-                        orders       : 1,
-                        productReview: 1,
-                        baned        : 1
-                    }
-                }
-            )
+            .find({}, {__v: 0, salt: 0, hashedPassword:0})
+            .skip((page - 1) * paginate)
+            .limit(paginate)
+            .sort(sort)
             .exec(function (err, users) {
                 if (err) {
                     return next(err);
@@ -359,6 +364,7 @@ module.exports = function () {
             delete users.password;
             req.session.logged = true;
             req.session._id = users._id;
+            req.session.role = false;
             res.status(200).send({success: req.session._id});
         });
     };
@@ -425,10 +431,10 @@ module.exports = function () {
         user = req.user;
         toEmail = req.user.email;
         smtpTransport = nodemailer.createTransport("SMTP", {
-            service: "Gmail",
+            service: env.EMAIL_SERVICE,
             auth   : {
-                user: "androsovani@gmail.com",
-                pass: "thunderbird09"
+                user: env.EMAIL,
+                pass: env.EMAIL_PASS
             }
         });
 
@@ -502,10 +508,10 @@ module.exports = function () {
 
             toEmail = user.email;
             smtpTransport = nodemailer.createTransport('SMTP', {
-                service: 'Gmail',
+                service: env.EMAIL_SERVICE,
                 auth   : {
-                    user: 'androsovani@gmail.com',
-                    pass: 'thunderbird09'
+                    user: env.EMAIL,
+                    pass: env.EMAIL_PASS
                 }
             });
 

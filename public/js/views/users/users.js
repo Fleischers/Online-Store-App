@@ -39,9 +39,11 @@ define([
 
         initialize: function (opt) {
             var self = this;
-            console.log('init');
+            var model;
+
             this.model = new User({_id: opt.id});
-            this.model.fetch({
+            model = this.model;
+            model.fetch({
                 success: function (user) {
                     var url = user.urlRoot + '/' + user.id;
                     self.render();
@@ -50,6 +52,7 @@ define([
                     alert('error');
                 }
             });
+
 
             this.channel = opt.channel;
             this.render();
@@ -163,54 +166,46 @@ define([
         },
 
         render: function () {
-            var idReceived;
+
             var model = this.model.toJSON();
-
-            $.ajax({
-                async: false,
-                url    : 'isAuth',
-                success: function (params) {
-
-                },
-                error  : function (error) {
-                    Backbone.history.navigate('#myApp/users/create', {trigger: true});
-                }
-                }).done(function (data) {
-                idReceived=data.success;
-                return idReceived;
-            });
-
-            console.log(model._id);
-
-            if(idReceived!=model._id){
-
-                $.ajax({
-                    url    : 'isAuthAdmin',
-                    success: function (params) {
-                        console.log('success');
-                    },
-                    error  : function (error) {
-                        alert('Access denied');
-                        Backbone.history.fragment='';
-                        Backbone.history.navigate('#myApp', {trigger: true})
-                    }
-                });
-
-            }
-
-            if (model.baned == true) {
-                alert('Write us to become unbanned and get access to account');
-                Backbone.history.fragment = '';
-                Backbone.history.navigate('#myApp', {trigger: true});
-            }
-
-            if (model.verified == false) {
-                alert('Please verify your e-mail');
-                Backbone.history.fragment = '';
-                Backbone.history.navigate('#myApp', {trigger: true});
-            }
+            var idReceived;
 
             this.$el.html(this.template({model: model}));
+            $.ajax({
+                url    : 'isAuthAdmin',
+                success: function (params) {
+                    console.log('success');
+                },
+                error  : function (error) {
+                    $.ajax({
+                        async  : false,
+                        url    : 'isAuth',
+                        success: function (params) {
+                            console.log('success 2')
+                        },
+                        error  : function (error) {
+                            Backbone.history.navigate('#myApp/users/create', {trigger: true});
+                        }
+                    }).done(function (data) {
+                        idReceived = data.success;
+                        return idReceived;
+                    });
+                    console.log(model);
+                    if (idReceived != model._id) {
+                        alert('Access denied');
+                        Backbone.history.fragment = '';
+                        Backbone.history.navigate('#myApp', {trigger: true});
+                    } else if (model.baned == true) {
+                        alert('Write us to become unbanned and get access to account');
+                        Backbone.history.fragment = '';
+                        Backbone.history.navigate('#myApp', {trigger: true});
+                    } else if (model.verified == false) {
+                        alert('Please verify your e-mail');
+                        Backbone.history.fragment = '';
+                        Backbone.history.navigate('#myApp', {trigger: true});
+                    }
+                }
+            });
         }
 
     });

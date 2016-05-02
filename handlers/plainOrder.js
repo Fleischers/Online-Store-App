@@ -1,3 +1,5 @@
+var env = process.env;
+require('../config/' + env.NODE_ENV);
 var validator = require('validator');
 var fs = require("fs");
 var HttpError = require('./customError').HttpError;
@@ -303,10 +305,10 @@ module.exports = function () {
                     toEmail = orders.customerInfo[0].email;
                     firstName = orders.customerInfo[0].firstName;
                     smtpTransport = nodemailer.createTransport("SMTP", {
-                        service: "Gmail",
+                        service: env.EMAIL_SERVICE,
                         auth   : {
-                            user: "androsovani@gmail.com",
-                            pass: "thunderbird09"
+                            user: env.EMAIL,
+                            pass: env.EMAIL_PASS
                         }
                     });
 

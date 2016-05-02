@@ -275,7 +275,6 @@ define([
                 wait   : true,
                 success: function (model) {
                     var id = model.id;
-                    console.log('-- Category removed from ' + id + ' ----');
                     Backbone.history.fragment = '';
                     Backbone.history.navigate('#myAdmin/products/'+id, {trigger: true});
                 },

@@ -378,7 +378,7 @@ define([
                 numbers = new Count();
 
                 query = query || '';
-                sort = sort || 'created:-1';
+                sort = sort || '';
                 page = page || 1;
                 count = count || 5;
 
