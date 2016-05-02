@@ -7,6 +7,7 @@ var handler = new ProductHandler();
 
 router.get('/', handler.fetch);
 router.get('/count', handler.countModels);
+router.patch('/removeCategory/:id', handler.removeCategory, categoryHandler.removeProduct);
 router.param('id', handler.validateData);
 router.post('/', handler.createProduct);
 router.get('/:id', handler.fetchById);

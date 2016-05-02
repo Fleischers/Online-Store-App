@@ -123,6 +123,27 @@ module.exports = function () {
         })
     };
 
+    this.removeCategory = function(req,res, next){
+        var id;
+        categories = req.body.categories;
+        id=req.params.id;
+
+        Product.findByIdAndUpdate(id, {$pull: {"categories": categories}}, {
+                safe  : true,
+                upsert: true
+            })
+            .exec(function (err, products) {
+                if (err) {
+
+                    return next(err);
+                }
+
+                req.params.id=categories;
+                req.body.products=products._id;
+                next();
+            })
+    };
+
     // ToDo: при deepPopulate вываливается куча ненужной инфы, нужно придумать как ее убрать
     // и оставить только поле postedBy
     this.fetchById = function (req, res, next) {

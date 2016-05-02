@@ -241,6 +241,25 @@ module.exports = function () {
 
     };
 
+    this.removeProduct= function(req,res,next){
+        body = req.body;
+        id = req.params.id;
+        products = body.products;
+
+        Category.findByIdAndUpdate(id, {$pull: {"products":  products}}, {
+                safe  : true,
+                upsert: true
+            })
+            .exec(function (err, categories) {
+                if (err) {
+
+                    return next(err);
+                }
+
+                res.status(200).send({success: categories});
+            })
+    };
+
     this.deleteById = function (req, res, next) {
         id = req.params.id;
 

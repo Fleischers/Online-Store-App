@@ -50,7 +50,8 @@ define([
             'keypress .edit'       : 'updateOnEnter',
             'click #logOutBtn'     : 'onLogOut',
             'click #uploadImg'     : 'sendPicture',
-            'click #addCategory'    : 'onAddCategory'
+            'click #addCategory'    : 'onAddCategory',
+            'click #removeCategory': 'onRemoveCategory'
         },
 
         initialize: function (opt) {
@@ -250,6 +251,33 @@ define([
                 success: function () {
                     Backbone.history.fragment = '';
                     Backbone.history.navigate('#myAdmin/products/' + self.model.id, {trigger: true})
+                },
+                error  : function (model, xhr) {
+                    alert(xhr.statusText);
+                }
+            });
+        },
+
+        onRemoveCategory: function(e){
+            var $target;
+            var categoryId;
+            var model;
+            e.stopPropagation();
+            $target=$(e.target);
+            categoryId=$target.attr('data-id');
+            console.log(categoryId);
+            changes = {};
+            changes['categories'] = categoryId;
+            model=this.model;
+            model.urlRoot = '/products/removeCategory/';
+            model.save(changes, {
+                patch: true,
+                wait   : true,
+                success: function (model) {
+                    var id = model.id;
+                    console.log('-- Category removed from ' + id + ' ----');
+                    Backbone.history.fragment = '';
+                    Backbone.history.navigate('#myAdmin/products/'+id, {trigger: true});
                 },
                 error  : function (model, xhr) {
                     alert(xhr.statusText);

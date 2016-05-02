@@ -62,7 +62,6 @@ define([
 
             Backbone.history.fragment = '';
             Backbone.history.navigate('#myApp/products/' + prodId, {trigger: true});
-
         },
 
         onPage: function (e) {
