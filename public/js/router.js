@@ -380,7 +380,7 @@ define([
                 query = query || '';
                 sort = sort || 'created:-1';
                 page = page || 1;
-                count = count || 12;
+                count = count || 5;
 
                 collection.fetch(
                     {
@@ -404,7 +404,6 @@ define([
                 });
 
                 pageCount = Math.ceil(num / count);
-                console.log(num);
                 collection.on('reset', viewCreator, [collection, query, pageCount, page])
             });
         },

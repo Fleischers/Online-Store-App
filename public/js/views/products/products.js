@@ -2,9 +2,10 @@ define([
     'backbone',
     'underscore',
     'text!templates/product/product.html',
-    'models/product'
+    'models/product',
+    'collections/categories'
     /*'ENTER_KEY'*/
-], function (Backbone, _, productTemplate, Product) {
+], function (Backbone, _, productTemplate, Product, Category) {
     var self;
     var img;
     var canvas;
@@ -48,11 +49,12 @@ define([
             'blur .edit'           : 'onCloseEdit',
             'keypress .edit'       : 'updateOnEnter',
             'click #logOutBtn'     : 'onLogOut',
-            'click #uploadImg'     : 'sendPicture'
-
+            'click #uploadImg'     : 'sendPicture',
+            'click #addCategory'    : 'onAddCategory'
         },
 
         initialize: function (opt) {
+            var collection;
             self = this;
 
             this.$el.on('change', '#imageInput', this.pictureAdded);
@@ -66,6 +68,18 @@ define([
                 },
                 error  : function () {
                     alert('error');
+                }
+            });
+
+            this.collection = new Category();
+            collection = this.collection;
+            collection.fetch({
+                success: function (models) {
+                    url = models.urlRoot + '/' + models.id;
+                    self.render();
+                },
+                error  : function (model, xhr) {
+                    alert(xhr.statusText);
                 }
             });
 
@@ -215,9 +229,50 @@ define([
              }*/
         },
 
+        onAddCategory: function (e) {
+            var categoryId;
+            var $li;
+            self = this;
+
+            e.stopPropagation();
+
+            $target = $(e.target);
+            $li = $target.closest('li');
+            categoryId = $li.attr('id');
+
+            changes = {};
+            changes['categories'] = categoryId;
+
+            model = this.model;
+            model.save(changes, {
+                patch  : true,
+                wait   : true,
+                success: function () {
+                    Backbone.history.fragment = '';
+                    Backbone.history.navigate('#myAdmin/products/' + self.model.id, {trigger: true})
+                },
+                error  : function (model, xhr) {
+                    alert(xhr.statusText);
+                }
+            });
+        },
+
         render: function () {
+            var collection;
+            var $thisEl;
+            var $li;
+            collection=this.collection.toJSON();
             model = this.model.toJSON();
-            this.$el.html(this.template({model: model}));
+
+            this.$el.html(this.template({collection: collection,model: model}));
+
+            $thisEl=this.$el;
+            if(model.categories){
+                model.categories.forEach(function(item){
+                    $li=$thisEl.find('li#'+item._id);
+                    $li.hide()
+                })
+            }
         }
 
     });

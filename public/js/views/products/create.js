@@ -29,7 +29,7 @@ define([
             $thisEl = this.$el;
             name = $thisEl.find('#name').val();
             price = $thisEl.find('#price').val();
-            status = $thisEl.find('#status').val();
+            status = $thisEl.find('#status').is(":checked");
             manufacturer = $thisEl.find('#manufacturer').val();
             description = $thisEl.find('#description').val();
 

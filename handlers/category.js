@@ -201,13 +201,7 @@ module.exports = function () {
         id = req.params.id;
         products = body.products;
         image = req.body.image;
-
-        if (products) {
-            if (!(validator.isMongoId(products))) {
-
-                return next(new HttpError(403, 'Invalid input'));
-            }
-        }
+        console.log(products);
 
         if (image) {
             Category.findByIdAndUpdate(id, {$set: {image: image}})
@@ -230,9 +224,7 @@ module.exports = function () {
                         return next(err);
                     }
 
-                    req.body.categories = categories._id;
-                    req.params.id = products;
-                    next();
+                    res.status(200).send({success: categories});
                 })
         } else {
             Category

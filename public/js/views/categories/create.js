@@ -43,7 +43,7 @@ define([
                     //var productUrl = '#myApp/users/account/' + id;
                     console.log('-- Created with id ' + id + ' ----');
                     Backbone.history.fragment = '';
-                    Backbone.history.navigate('#myAdmin/categories', {trigger: true});
+                    Backbone.history.navigate('#myAdmin/categories/s=name:1/p=1', {trigger: true});
                 },
                 error  : function (model, xhr) {
                     alert(xhr.statusText);

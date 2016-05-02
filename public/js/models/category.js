@@ -4,8 +4,7 @@ define(['backbone'], function (Backbone) {
 
         defaults: {
             name       : '',
-            description: '',
-            image      : '/images/categories/default.jpg'
+            description: ''
         },
 
         parse: function (resp) {

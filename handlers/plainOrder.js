@@ -290,7 +290,6 @@ module.exports = function () {
         id = req.params.id;
         comment = req.body.comment;
         status = req.body.status;
-        console.log(comment, status);
 
         if (status == 'Recovery') {
             PlainOrder

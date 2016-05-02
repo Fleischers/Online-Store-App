@@ -1,20 +1,5 @@
 <div class="container-fluid">
-    <div class="col-md-2"><h3><%=model.name%></h3></div>
-    <div class="col-md-8"></div>
-    <div class="col-md-2">
-
-        <h3><div class="btn-group">
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Add product <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" id="addProduct">
-                <% (collection).forEach(function(model){ %>
-                <li id="<%=model._id%>"><p><%=model.name%></p></li>
-                <%})%>
-            </ul>
-        </div></h3>
-
-    </div>
+    <div class="col-md-12"><h3><%=model.name%></h3></div>
 </div>
 <hr>
 <div class="container-fluid">
@@ -60,19 +45,33 @@
             <h4>Product:</h4>
             <table class="table">
                 <tr>
-                    <td><strong>Product ID: </strong></td>
-                    <td><strong>Product name: </strong></td>
+                    <td><strong>Image: </strong></td>
+                    <td><strong>Name: </strong></td>
+                    <td><strong>Price: </strong></td>
                 </tr>
                 <% if(model.products){model.products.forEach(function(item){ %>
-                <tr>
-
-                    <td><%=item._id%></td>
-                    <td><%=item.name%></td>
-
+                <tr data-id="<%=item._id%>">
+                    <td style="width: 10%">
+                        <a class="thumbnail">
+                            <img src="<%=item.image%>">
+                        </a>
+                    </td>
+                    <td style="width: 30%"><%=item.name%></td>
+                    <td><%=item.price%>$</td>
                 </tr>
                 <%})}%>
             </table>
-
+            <div class="row" align="center">
+                <nav>
+                    <ul class="pagination" id="pagination">
+                        <% if(pages){pages.forEach(function(item){ %>
+                        <li class="" id="page" data-id="<%=item%>">
+                            <a><%=item%></a>
+                        </li>
+                        <%})}%>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 </div>

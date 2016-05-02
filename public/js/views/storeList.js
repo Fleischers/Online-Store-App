@@ -61,7 +61,7 @@ define([
             prodId = $div.attr('id');
 
             Backbone.history.fragment = '';
-            Backbone.history.navigate('#myApp/products/' + prodId + '/p=1', {trigger: true});
+            Backbone.history.navigate('#myApp/products/' + prodId, {trigger: true});
 
         },
 

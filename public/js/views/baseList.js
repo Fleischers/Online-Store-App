@@ -21,7 +21,8 @@ define([
             'click #removeBtn'             : 'onRemove',
             'click #product'               : 'onProduct',
             'click li[role="presentation"]': 'onOrderByStatus',
-            'click li.sort': 'onSort'
+            'click li.sort'                : 'onSort',
+            'click li#page'                : 'onPage'
         },
 
         initialize: function (opt) {
@@ -29,7 +30,6 @@ define([
             this.channel = opt.channel;
             this.pageCount = opt.pageCount;
             this.page = opt.page;
-            console.log(opt);
             this.render();
         },
 
@@ -122,7 +122,7 @@ define([
 
             collection = this.collection;
             $checkboxes = $("input:checkbox:checked");
-            navigateUrl = '#myAdmin/' + this.contentType;
+            navigateUrl = '#myAdmin/' + this.contentType+'/p=1';
 
             $checkboxes.each(function () {
                 $target = $(this);
@@ -172,9 +172,27 @@ define([
             } else {
                 url = baseUrl.substring(0, index);
             }
-            console.log('#' + url + 's=' + sortBy + '/p=1');
+
             Backbone.history.fragment = '';
             Backbone.history.navigate('#' + url + 's=' + sortBy + '/p=1', {trigger: true});
+        },
+
+        onPage: function (e) {
+            var $target;
+            var $page;
+            var contentType;
+            var url;
+            var basicUrl;
+            e.stopPropagation();
+            contentType = this.contentType.split(' ');
+            contentType = contentType[0];
+
+            $target = $(e.target);
+            $page = $target.html();
+            basicUrl = Backbone.history.fragment;
+            url = basicUrl.substring(0, basicUrl.length - 1);
+            Backbone.history.navigate('#' + url + $page, {trigger: true});
+
         },
 
         render: function () {
@@ -189,11 +207,12 @@ define([
             for (var i = 0; i < pages; i++) {
                 pagesArr.push(i + 1);
             }
-            console.log(this.pageCount);
+            $thisEl = this.$el;
+
             $.ajax({
                 url    : 'isAuthAdmin',
                 success: function (params) {
-                    console.log('success');
+                    //console.log('success');
                 },
                 error  : function (error) {
                     Backbone.history.navigate('#myAdmin', {trigger: true});
@@ -206,7 +225,6 @@ define([
             }));
 
             if (this.query) {
-                $thisEl = this.$el;
                 $li = $thisEl.find('li.' + this.query);
                 if ($li) {
                     $li.addClass('active')
@@ -214,7 +232,7 @@ define([
                 if (this.query == 'Abandoned') {
                     $td1 = $thisEl.find('td#recovery');
                     $td2 = $thisEl.find('td#recoveryVal');
-                    $sort=$thisEl.find('li.sort');
+                    $sort = $thisEl.find('li.sort');
                     $sort.show();
                     $td1.show();
                     $td2.show();
@@ -222,7 +240,6 @@ define([
             }
 
             if ($thisEl) {
-                $thisEl = this.$el;
                 $li = $thisEl.find("[data-id='" + this.page + "']");
                 $li.addClass('active');
             }

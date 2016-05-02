@@ -3,11 +3,9 @@ define([
     'underscore',
     'text!templates/product/productForStore.html',
     'models/product',
-    'models/productReview',
-    'collections/productReviews',
-    'collections/productReviewsCount'
+    'models/productReview'
     /*'ENTER_KEY'*/
-], function (Backbone, _, productTemplate, Product, Review, ProductReviews, Count) {
+], function (Backbone, _, productTemplate, Product, Review) {
     var model;
     var self;
     var $target;
@@ -40,11 +38,9 @@ define([
             var number;
             var page;
             var count;
-            this.page = opt.page;
+            this.page = 1;
 
             self = this;
-            page = this.page || 1;
-            count = count || 5;
 
             this.model = new Product({_id: opt.id});
             this.model.fetch({
@@ -57,40 +53,14 @@ define([
                 }
             });
 
-            this.collection = new ProductReviews();
-            this.collection.fetch({
-                reset: true,
-                data : {
-                    page  : page,
-                    count : count,
-                    filter: opt.id
-                }
-            });
-
-            this.additionalCollection = new Count();
-            this.additionalCollection.fetch({
-                async: false,
-                reset: true,
-                data : {
-                    filter: opt.id
-                }
-            }).done(function (result) {
-                number = result.success;
-                return number;
-            });
-
-            this.pages = Math.ceil(number / count);
-
             this.render();
         },
 
         onSendReview: function (e) {
-            var url;
             var basicUrl;
-            var page;
             var err;
-            err=[];
-            page=this.pages;
+
+            err = [];
             $target = $(e.target);
             $thisEl = this.$el;
             description = $thisEl.find('#description').val();
@@ -108,7 +78,7 @@ define([
                 err.push('This field can\'t be such long.');
             }
 
-            if(err.length==0){
+            if (err.length == 0) {
                 $.ajax({
                     async  : false,
                     url    : 'isAuth',
@@ -128,9 +98,8 @@ define([
                             success: function (model) {
                                 alert('Review added');
                                 basicUrl = Backbone.history.fragment;
-                                url = basicUrl.substring(0, basicUrl.length - 1);
                                 Backbone.history.fragment = '';
-                                Backbone.history.navigate(url+page, {trigger: true})
+                                Backbone.history.navigate(basicUrl, {trigger: true})
                             },
                             error  : function (model, xhr) {
                                 alert(xhr.statusText);
@@ -141,7 +110,7 @@ define([
                         alert('LogIn to add a review')
                     }
                 });
-            }else {
+            } else {
                 err.forEach(function (item) {
                     alert(item);
                 })
@@ -179,37 +148,39 @@ define([
         },
 
         onPage: function (e) {
+            var self = this;
             var $target;
             var $page;
-            var url;
-            var basicUrl;
-            e.stopPropagation();
+            var contentType;
 
+            e.stopPropagation();
             $target = $(e.target);
             $page = $target.html();
-            basicUrl = Backbone.history.fragment;
-            url = basicUrl.substring(0, basicUrl.length - 1);
-            Backbone.history.navigate('#' + url + $page, {trigger: true});
+            this.page = $page;
+            this.render();
         },
 
         render: function () {
-            var collection;
+            var count;
             var $thisEl;
+            var subPages;
+            var page;
             var $li;
-            var pages = this.pages;
-            model = this.model.toJSON();
-            collection = this.collection.toJSON();
-
             var pagesArr = [];
-
-            for (var i = 0; i < pages; i++) {
-                pagesArr.push(i + 1);
+            page = this.page;
+            model = this.model.toJSON();
+            count = 5;
+            if (model.productReviews) {
+                subPages = Math.ceil(model.productReviews.length / count);
+                for (var i = 0; i < subPages; i++) {
+                    pagesArr.push(i + 1);
+                }
+                model.productReviews = (model.productReviews).slice((page - 1) * count, page * (count));
             }
 
             this.$el.html(this.template({
-                model     : model,
-                collection: collection,
-                pages     : pagesArr
+                model: model,
+                pages: pagesArr
             }));
 
             $thisEl = this.$el;
