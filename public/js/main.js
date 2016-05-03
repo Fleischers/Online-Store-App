@@ -3,6 +3,7 @@ var APP = APP || {};
 require.config({
 
     paths: {
+        cropper    : './libs/cropper/dist/cropper',
         jStorage   : './libs/jStorage/jstorage',
         bootstrap  : './libs/bootstrap/dist/js/bootstrap',
         underscore : './libs/underscore/underscore',
@@ -13,35 +14,36 @@ require.config({
         models     : './models',
         collections: './collections',
         views      : './views',
-        socket   : './libs/socket.io-client/socket.io'
+        socket     : './libs/socket.io-client/socket.io'
     },
 
     shim: {
         underscore: {
             exports: '_'
         },
+        cropper   : ['jQuery'],
         jStorage  : ['jQuery'],
         bootstrap : ['jQuery'],
         backbone  : ['underscore', 'jQuery'],
-        app       : ['bootstrap', 'backbone', 'jStorage'/*, 'socket'*/]
+        app       : ['bootstrap', 'backbone', 'jStorage', 'cropper'/*, 'socket'*/]
     }
 });
 
 require(['app'/*, 'socket'*/], function (app/*, socket*/) {
     /*var io = socket();
 
-    io.on('customSocket', function (data) {
-        console.log(data);
+     io.on('customSocket', function (data) {
+     console.log(data);
 
-        io.emit('response', '............. dcsd .........')
-    });*/
-  /*  io.on('info',function(msg){
-        console.log(msg)
-    });
-    io.on('message',function(msg){
-        console.log(msg)
-    });
-    io.emit('auth', '............. dcsd .........');*/
+     io.emit('response', '............. dcsd .........')
+     });*/
+    /*  io.on('info',function(msg){
+     console.log(msg)
+     });
+     io.on('message',function(msg){
+     console.log(msg)
+     });
+     io.emit('auth', '............. dcsd .........');*/
 
     app.initialize();
 });

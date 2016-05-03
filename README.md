@@ -1,6 +1,7 @@
 # Online Store App
 
   - Configure Enviroment variables with 'NODE_ENV=development' or 'NODE_ENV=production'
+  - Configure /config/development.js or /config/production.js with your Email credentials and Twilio SID and TOKEN 
   - Install required modules: npm install && bower install`
   - Open MongoDB connection
   - Run server.js with NodeJS

@@ -211,7 +211,7 @@ module.exports = function () {
                         return next(err);
                     }
 
-                    res.redirect('http://localhost:3000/#myAdmin/categories/' + id);
+                    res.status(200).send({success: categories.image});
                 })
         } else if (products) {
             Category.findByIdAndUpdate(id, {$push: {"products": {_id: products}}}, {

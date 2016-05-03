@@ -272,7 +272,7 @@ module.exports = function () {
                         return next(err);
                     }
 
-                    res.redirect('http://localhost:3000/#myApp/users/account/' + id);
+                    res.status(200).send({success: users.avatar});
                 });
         } else if (orders.length > 0) {
             User.findByIdAndUpdate(id, {$push: {"orders": {_id: orders}}}, {
