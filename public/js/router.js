@@ -8,7 +8,7 @@ define([
 
         routes: {
             'myApp'                                                     : 'homepageRouter',
-            /*'myApp/chat'                                      : 'chatRouter',*/
+            'myApp/chat'                                                : 'chatRouter',
             'myApp/cart'                                                : 'cartRouter',
             'myApp/forgotPass'                                          : 'forgotPassRouter',
             'myApp/resetPass/:token'                                    : 'resetPassRouter',
@@ -17,8 +17,7 @@ define([
             'myApp/:content/account/:id'                                : 'userRouter',
             'myApp/users/create'                                        : 'usersCreationRouter',
             'myAdmin'                                                   : 'adminPageRouter',
-            /* 'myAdmin/logchat'                                 : 'logChatRouter',
-             'myAdmin/chat'                                    : 'adminChatRouter',*/
+            'myAdmin/chat'                                                : 'logChatRouter',
             'myAdmin/:content(/q=:query)(/s=:sort)(/p=:page)(/c=:count)': 'adminContentRouter',
             'myAdmin/:content/create'                                   : 'creationRouter',
             'myAdmin/:content/:id'                                      : 'itemRouter'
@@ -32,22 +31,32 @@ define([
             });
         },
 
-        /*chatRouter: function () {
-         this.pageRouter.call();
-         var self;
-         var viewUrl;
-
-         self = this;
-         viewUrl = 'views/chat/chat';
-
-         require([viewUrl], function (CreateView) {
-         if (self.view) {
-         self.view.undelegateEvents();
-         }
-
-         self.view = new CreateView({channel: self.channel});
-         })
-         },*/
+        chatRouter: function () {
+            this.pageRouter.call();
+            var self;
+            var viewUrl;
+            self = this;
+            viewUrl = 'views/chat/chat';
+            require([viewUrl], function (CreateView) {
+                if (self.view) {
+                    self.view.undelegateEvents();
+                }
+                self.view = new CreateView({channel: self.channel});
+            })
+        },
+        logChatRouter: function () {
+            var self;
+            var viewUrl;
+            this.adminRouter.call();
+            self = this;
+            viewUrl = 'views/chat/login';
+            require([viewUrl], function (CreateView) {
+                if (self.view) {
+                    self.view.undelegateEvents();
+                }
+                self.view = new CreateView({channel: self.channel});
+            })
+        },
 
         cartRouter: function () {
             this.pageRouter.call();
@@ -67,40 +76,6 @@ define([
                 self.view = new CreateView({channel: self.channel});
             });
         },
-
-        /*  logChatRouter: function () {
-         var self;
-         var viewUrl;
-         this.adminRouter.call();
-
-         self = this;
-         viewUrl = 'views/chat/login';
-
-         require([viewUrl], function (CreateView) {
-         if (self.view) {
-         self.view.undelegateEvents();
-         }
-
-         self.view = new CreateView({channel: self.channel});
-         })
-         },*/
-
-        /* adminChatRouter: function () {
-         var self;
-         var viewUrl;
-         this.adminRouter.call();
-
-         self = this;
-         viewUrl = 'views/chat/adchat';
-
-         require([viewUrl], function (CreateView) {
-         if (self.view) {
-         self.view.undelegateEvents();
-         }
-
-         self.view = new CreateView({channel: self.channel});
-         })
-         },*/
 
         homepageRouter: function () {
             var self;
@@ -194,7 +169,7 @@ define([
             });
         },
 
-        storeItemRouter: function (content, id, page) {
+        storeItemRouter: function (content, id) {
             var self;
             var viewUrl;
             this.pageRouter.call();
@@ -216,7 +191,6 @@ define([
 
                 self.view = new CreateView({
                     id     : id,
-                    page   : page,
                     channel: self.channel
                 });
             });

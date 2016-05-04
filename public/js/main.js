@@ -25,25 +25,23 @@ require.config({
         jStorage  : ['jQuery'],
         bootstrap : ['jQuery'],
         backbone  : ['underscore', 'jQuery'],
-        app       : ['bootstrap', 'backbone', 'jStorage', 'cropper'/*, 'socket'*/]
+        app       : ['bootstrap', 'backbone', 'jStorage', 'cropper', 'socket']
     }
 });
 
-require(['app'/*, 'socket'*/], function (app/*, socket*/) {
-    /*var io = socket();
-
-     io.on('customSocket', function (data) {
-     console.log(data);
-
-     io.emit('response', '............. dcsd .........')
-     });*/
-    /*  io.on('info',function(msg){
-     console.log(msg)
-     });
-     io.on('message',function(msg){
-     console.log(msg)
-     });
-     io.emit('auth', '............. dcsd .........');*/
+require(['app', 'socket'], function (app, socket) {
+    var io = socket();
+    io.on('customSocket', function (data) {
+        console.log(data);
+        io.emit('response', '............. dcsd .........')
+    });
+    io.on('info', function (msg) {
+        console.log(msg)
+    });
+    io.on('message', function (msg) {
+        console.log(msg)
+    });
+    io.emit('auth', '............. dcsd .........');
 
     app.initialize();
 });

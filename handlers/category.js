@@ -201,7 +201,6 @@ module.exports = function () {
         id = req.params.id;
         products = body.products;
         image = req.body.image;
-        console.log(products);
 
         if (image) {
             Category.findByIdAndUpdate(id, {$set: {image: image}})

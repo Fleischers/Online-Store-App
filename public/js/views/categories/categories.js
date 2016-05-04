@@ -143,6 +143,7 @@ define([
                     alert('image saved!');
 
                     idReceived = res.success;
+                    console.log(idReceived)
                     $('img#canvasImg').removeAttr('src');
                     $('img#canvasImage').removeAttr('src');
                     $('img#image').attr("src", idReceived + '?' + Math.random());
