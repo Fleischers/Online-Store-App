@@ -17,7 +17,7 @@ define([
             'myApp/:content/account/:id'                                : 'userRouter',
             'myApp/users/create'                                        : 'usersCreationRouter',
             'myAdmin'                                                   : 'adminPageRouter',
-            'myAdmin/chat'                                                : 'logChatRouter',
+            'myAdmin/chat'                                              : 'logChatRouter',
             'myAdmin/:content(/q=:query)(/s=:sort)(/p=:page)(/c=:count)': 'adminContentRouter',
             'myAdmin/:content/create'                                   : 'creationRouter',
             'myAdmin/:content/:id'                                      : 'itemRouter'
@@ -31,7 +31,7 @@ define([
             });
         },
 
-        chatRouter: function () {
+        chatRouter   : function () {
             this.pageRouter.call();
             var self;
             var viewUrl;
