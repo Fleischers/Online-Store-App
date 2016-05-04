@@ -7,8 +7,8 @@ process.env.DB_PORT = '27017';
 process.env.TWILIO_SID='AC7b8c6ffda04d01255382391a8ea23f79';
 process.env.TWILIO_TOKEN='ed01cd3197a279719df0d57241dfd908';
 process.env.EMAIL_SERVICE='Gmail';
-process.env.EMAIL='androsovani@gmail.com';
-process.env.EMAIL_PASS='thunderbird09';
+process.env.EMAIL='';
+process.env.EMAIL_PASS='';
 
 process.env.PORT = 3000;
 
