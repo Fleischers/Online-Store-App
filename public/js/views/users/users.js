@@ -70,15 +70,27 @@ define([
             var sourceY;
             var sourceWidth;
             var sourceHeight;
+            var filename;
+            var ext;
+            var url;
             canvas = document.getElementById('myCanvas');
             context = canvas.getContext('2d');
             _URL = window.URL || window.webkitURL;
 
             if (e.target.files && e.target.files[0]) {
-                img = new Image();
-                img.src = _URL.createObjectURL(e.target.files[0]);
-                $canvasImage=$('#canvasImage');
-                $canvasImage.attr('src', img.src);
+                filename = e.target.files[0].name;
+                filename = filename.split('.');
+                ext = filename[1];
+                if (ext == 'jpeg' || ext == 'jpg' || ext == 'png') {
+                    img = new Image();
+                    img.src = _URL.createObjectURL(e.target.files[0]);
+                    $canvasImage = $('#canvasImage');
+                    $canvasImage.attr('src', img.src);
+                }
+                else {
+                    alert("Upload File with Extension 'jpeg, jpg, png'");
+                    $('#uploadImg').hide();
+                }
             }
 
             $canvasImage.cropper({
@@ -143,7 +155,6 @@ define([
                     alert('image saved!');
 
                     idReceived = res.success;
-                    console.log(idReceived)
                     $('img#canvasImg').removeAttr('src');
                     $('img#canvasImage').removeAttr('src');
                     $('img#image').attr("src", idReceived + '?' + Math.random());
@@ -283,7 +294,6 @@ define([
                         idReceived = data.success;
                         return idReceived;
                     });
-                    console.log(model);
                     if (idReceived != model._id) {
                         alert('Access denied');
                         Backbone.history.fragment = '';

@@ -30,7 +30,7 @@ define([
 
         onChat: function(e){
             baseUrl = '#myAdmin';
-            url = baseUrl + '/logchat';
+            url = baseUrl + '/chat';
 
             e.stopPropagation();
             Backbone.history.fragment = '';

@@ -120,7 +120,6 @@ define([
         onAddToCart: function (e) {
             $target = $(e.target);
             id = $target.attr('data-id');
-            //price = $('h3#price').attr('data-id');
             quantity = $('select#quantity option:selected').val();
 
             $.ajax({
@@ -135,7 +134,8 @@ define([
                     $.jStorage.set('quantity', quantityArr);
                 },
                 error  : function (error) {
-                    alert('LogIn to add a review')
+                    e.preventDefault();
+                    alert('LogIn to add product')
                 }
             });
         },
