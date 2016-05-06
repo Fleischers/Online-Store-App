@@ -11,7 +11,11 @@ var routes = require('./routes/index');
 var Chat = require('./chat');
 var env = process.env;
 var db;
-require('./config/' + env.NODE_ENV);
+var configPath = './config/' + env.NODE_ENV;
+var _ = require('lodash');
+
+require('dotenv').config({path: configPath});
+
 
 mongoose.connect(env.DB_HOST, env.DB_NAME, env.DB_PORT /*{user: env.DB_USER,pass: env.DB_PASS}*/);
 db = mongoose.connection;
