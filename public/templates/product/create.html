@@ -6,11 +6,11 @@
         <div class="col-lg-4 col-md-4">
             <div class="form-group">
                 <h3>
-                    <small>Name</small>
+                    <small>Name: </small>
                 </h3>
                 <input class="form-control" type="text" id="name">
                 <h3>
-                    <small>Price</small>
+                    <small>Price: </small>
                 </h3>
                 <input class="form-control" type="text" id="price">
             </div>
@@ -18,13 +18,9 @@
         <div class="col-lg-4 col-md-4">
             <div class="form-group">
                 <h3>
-                    <small>Status</small>
+                    <small>Description</small>
                 </h3>
-                <input class="form-control" type="text" id="status">
-                <h3>
-                    <small>Manufacturer</small>
-                </h3>
-                <input class="form-control" type="text" id="manufacturer">
+                <textarea id="description" class="form-control" rows="6"></textarea>
                 <h4 style="margin-top: 25px;">                </h4>
                 <div class="form-group">
                     <button type="button" class="btn btn-default" id="createBtn">
@@ -36,10 +32,13 @@
         <div class="col-lg-4 col-md-4">
             <div class="form-group">
                 <h3>
-                    <small>Description</small>
+                    <small>Manufacturer: </small>
                 </h3>
-                <textarea id="description" class="form-control" rows="6"></textarea>
-
+                <input class="form-control" type="text" id="manufacturer">
+                <h3>
+                    <small>Available: </small>
+                </h3>
+                <label><input id="status" type="checkbox" id="blankCheckbox" data-id=""></label>
                 </div>
         </div>
     </form>

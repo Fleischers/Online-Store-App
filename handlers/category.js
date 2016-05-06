@@ -61,14 +61,27 @@ module.exports = function () {
     };
 
     this.fetch = function (req, res, next) {
+        var sort;
         query = req.query.filter;
         paginate = req.query.count;
         page = req.query.page;
+        sort=req.query.sort;
 
         if (query) {
             filter = {name: query}
         } else {
             filter = {}
+        }
+
+        if(sort){
+            var index=sort.indexOf(':');
+            var field=sort.substring(0,index);
+            var rule=sort.substring(index+1);
+            if(field=='name'){
+                sort={name: rule};
+            }else if(field=='created'){
+                sort={created: rule};
+            }
         }
 
         Category.find(filter, {
@@ -82,6 +95,7 @@ module.exports = function () {
             })
             .skip((page - 1) * paginate)
             .limit(paginate)
+            .sort(sort)
             .exec(function (err, categories) {
                 if (err) {
 
@@ -188,13 +202,6 @@ module.exports = function () {
         products = body.products;
         image = req.body.image;
 
-        if (products) {
-            if (!(validator.isMongoId(products))) {
-
-                return next(new HttpError(403, 'Invalid input'));
-            }
-        }
-
         if (image) {
             Category.findByIdAndUpdate(id, {$set: {image: image}})
                 .exec(function (err, categories) {
@@ -203,7 +210,7 @@ module.exports = function () {
                         return next(err);
                     }
 
-                    res.redirect('http://localhost:3000/#myAdmin/categories/' + id);
+                    res.status(200).send({success: categories.image});
                 })
         } else if (products) {
             Category.findByIdAndUpdate(id, {$push: {"products": {_id: products}}}, {
@@ -216,9 +223,7 @@ module.exports = function () {
                         return next(err);
                     }
 
-                    req.body.categories = categories._id;
-                    req.params.id = products;
-                    next();
+                    res.status(200).send({success: categories});
                 })
         } else {
             Category
@@ -233,6 +238,25 @@ module.exports = function () {
                 })
         }
 
+    };
+
+    this.removeProduct= function(req,res,next){
+        body = req.body;
+        id = req.params.id;
+        products = body.products;
+
+        Category.findByIdAndUpdate(id, {$pull: {"products":  products}}, {
+                safe  : true,
+                upsert: true
+            })
+            .exec(function (err, categories) {
+                if (err) {
+
+                    return next(err);
+                }
+
+                res.status(200).send({success: categories});
+            })
     };
 
     this.deleteById = function (req, res, next) {

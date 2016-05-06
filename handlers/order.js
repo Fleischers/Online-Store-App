@@ -1,6 +1,5 @@
 var validator = require('validator');
 var fs = require("fs");
-var async = require('async');
 var HttpError = require('./customError').HttpError;
 var Order = require('../models/order');
 
@@ -55,7 +54,7 @@ module.exports = function () {
     // ОДНОВРЕМЕННО на запроc "?expand=products&expand=customerInfo"
     // разобраться почему не работает "?expand=products" так как нужно
     // скрыть из customerInfo и products ненужные поля
-    this.fetch = function (req, res, next) {
+   /* this.fetch = function (req, res, next) {
         query = req.query.filter;
         paginate = req.query.count;
         page = req.query.page;
@@ -66,7 +65,7 @@ module.exports = function () {
             filter = {}
         }
 
-        /* var dbQuery;
+        /!* var dbQuery;
          var query = req.query;
          var aggregateObject = [];
          var expandBy;
@@ -168,7 +167,7 @@ module.exports = function () {
          }
 
          res.status(200).send(orders);
-         });*/
+         });*!/
         Order.find(filter, {__v: 0})
             .populate({
                 path  : 'products',
@@ -214,7 +213,7 @@ module.exports = function () {
 
                 res.status(200).send(orders);
             })
-    };
+    };*/
 
     this.createOrder = function (req, res, next) {
         itemsQuantity = req.body.itemsQuantity;
@@ -237,7 +236,7 @@ module.exports = function () {
 
                         return next(err);
                     }
-
+                    console.log('order created with id ' + orders._id);
                     req.params.id = orders._id;
                     next();
                 }
@@ -267,7 +266,6 @@ module.exports = function () {
     };
 
     this.updateOrder = function (req, res, next) {
-        body = req.body;
         id = req.params.id;
         totalPrice = req.body.totalPrice;
 
@@ -275,46 +273,16 @@ module.exports = function () {
             id = id.toString();
         }
 
-        if (totalPrice) {
-            Order
-                .findByIdAndUpdate(id, {$set: {totalPrice: totalPrice}})
-                .exec(function (err, orders) {
-                    if (err) {
-
-                        return next(err);
-                    }
-
-                    req.params.id = orders.customerInfo;
-                    req.body.orders = orders._id;
-                    next();
-                })
-        } else {
-            Order
-                .findByIdAndUpdate(id, {$set: body})
-                .exec(function (err, orders) {
-                    if (err) {
-
-                        return next(err);
-                    }
-
-                    res.status(200).send(orders);
-                })
-        }
-    };
-
-    this.deleteById = function (req, res, next) {
-        id = req.params.id;
-
         Order
-            .findByIdAndRemove(id)
+            .findByIdAndUpdate(id, {$set: {totalPrice: totalPrice}})
             .exec(function (err, orders) {
                 if (err) {
 
                     return next(err);
                 }
 
-                res.status(200).send(orders);
+                req.body.orders = orders._id;
+                next();
             })
     };
-}
-;
+};

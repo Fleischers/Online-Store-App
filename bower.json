@@ -22,7 +22,8 @@
     "requirejs": "^2.2.0",
     "bootstrap": "^3.3.6",
     "text": "^2.0.14",
-    "jStorage": "jstorage#^0.4.12",
-    "socket.io-client": "^1.4.5"
+    "socket.io-client": "^1.4.5",
+    "cropper": "^2.3.0",
+    "jStorage": "^0.4.12"
   }
 }

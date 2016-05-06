@@ -11,30 +11,32 @@
                 </ul>
             </h5>
         </div>
-        <div class="col-lg-3 col-md-3" align="right" style="padding: 0px">
-            <h5 align="right">
-                <ul class="list-inline">
-                    <li><input id="searchFor" type="text" class="form-control input-sm"
-                               placeholder="What are you looking for?"></li>
-                    <li id="search"><a><i class="fa fa-search fa-lg"></i></a></li>
-                </ul>
+        <div class="col-lg-2 col-md-2" align="right" style="padding: 0px"></div>
+        <div class="col-lg-2 col-md-2" style="padding: 0px">
+            <h5>
+                <input id="searchFor" type="text" class="form-control input-sm"
+                       placeholder="What are you looking for?">
             </h5>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-8 hidden-1">
+        <div class="col-lg-2 col-md-2 col-sm-8 hidden-1">
             <h5 style="margin-top: 18px" align="right">
                 <ul class="list-inline" style="margin-right: 50px">
-                    <div class="col-lg-4 col-md-4" hidden></div>
-                    <div class="col-lg-4 col-md-4" style="padding: 0px">
+                    <div class="col-lg-2 col-md-2" style="padding: 0px;">
+                            <ul class="list-inline">
+                                <li id="search"><a><i class="fa fa-search fa-lg"></i></a></li>
+                            </ul>
+                    </div>
+                    <div class="col-lg-6 col-md-6" style="padding: 0px">
                         <ul class="list-inline">
                             <li><a id="gohome"><i class="fa fa-home fa-lg"></i></a></li>
                             <li><a id="user"><i class="fa fa-user fa-lg"></i></a></li>
                             <li><a id="chat"><i class="fa fa-weixin" aria-hidden="true"></i></a></li>
                         </ul>
                     </div>
-                    <div class="col-lg-4 col-md-4" style="padding: 0px">
+                    <div class="col-lg-4 col-md-4" style="padding: 0px" align="center">
                         <li class="dropdown">
                             <a id="cart">Cart<i
-                                    class="fa fa-shopping-basket fa-lg" style="margin-left: 6px"></i>
+                                    class="fa fa-shopping-basket fa-lg"></i>
                             </a>
                         </li>
                     </div>
@@ -59,9 +61,10 @@
     </div>
     <div class="collapse navbar-collapse" id="responsive-menu">
         <ul class="nav navbar-nav">
-            <li><a id="products">All products</a></li>
+            <li><a id="products">#Products</a></li>
+            <li><a id="categories">#Categories</a></li>
             <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown">Categories
+                <a class="dropdown-toggle" data-toggle="dropdown">#Choose category
                     <b class="caret"></b>
                     <ul class="dropdown-menu">
                         <% if(collection){collection.forEach(function(item){ %>

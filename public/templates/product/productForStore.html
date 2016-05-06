@@ -111,7 +111,7 @@
                         </div>
                         <div class="col-lg-4 col-md-4">
                             <h4>
-                                <small> <%=item.created%></small>
+                                <small><%=item.created%></small>
                             </h4>
                         </div>
                     </div>
@@ -121,6 +121,17 @@
                 </div>
             </div>
             <%})}%>
+            <div class="row" align="center">
+                <nav>
+                    <ul class="pagination" id="pagination">
+                        <% if(pages){pages.forEach(function(item){ %>
+                        <li class="" id="page" data-id="<%=item%>">
+                            <a><%=item%></a>
+                        </li>
+                        <%})}%>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
 </div>

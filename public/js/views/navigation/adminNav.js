@@ -30,7 +30,7 @@ define([
 
         onChat: function(e){
             baseUrl = '#myAdmin';
-            url = baseUrl + '/logchat';
+            url = baseUrl + '/chat';
 
             e.stopPropagation();
             Backbone.history.fragment = '';
@@ -49,7 +49,7 @@ define([
 
         onOrders: function (e) {
             baseUrl = '#myAdmin';
-            url = baseUrl + '/orders';
+            url = baseUrl + '/plainOrders/q=All/p=1';
 
             e.stopPropagation();
             Backbone.history.fragment = '';
@@ -58,7 +58,7 @@ define([
 
         onCollections: function (e) {
             baseUrl = '#myAdmin';
-            url = baseUrl + '/categories';
+            url = baseUrl + '/categories/s=name:1/p=1';
 
             e.stopPropagation();
             Backbone.history.fragment = '';
@@ -67,7 +67,7 @@ define([
 
         onProducts: function (e) {
             baseUrl = '#myAdmin';
-            url = baseUrl + '/products';
+            url = baseUrl + '/products/s=name:1/p=1';
 
             e.stopPropagation();
             Backbone.history.fragment = '';
@@ -76,7 +76,7 @@ define([
 
         onCustomers: function (e) {
             baseUrl = '#myAdmin';
-            url = baseUrl + '/users';
+            url = baseUrl + '/users/s=email:1/p=1';
 
             e.stopPropagation();
             Backbone.history.fragment = '';

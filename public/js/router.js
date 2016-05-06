@@ -7,21 +7,20 @@ define([
         view: null,
 
         routes: {
-            'myApp'                                           : 'homepageRouter',
-            /*'myApp/chat'                                      : 'chatRouter',*/
-            'myApp/cart'                                      : 'cartRouter',
-            'myApp/forgotPass'                                : 'forgotPassRouter',
-            'myApp/resetPass/:token'                          : 'resetPassRouter',
-            'myApp/:content(/q=:query)(/p=:page)(/c=:count)'  : 'storeContentRouter',
-            'myApp/:content/:id'                              : 'storeItemRouter',
-            'myApp/:content/account/:id'                      : 'userRouter',
-            'myApp/users/create'                              : 'usersCreationRouter',
-            'myAdmin'                                         : 'adminPageRouter',
-            /* 'myAdmin/logchat'                                 : 'logChatRouter',
-             'myAdmin/chat'                                    : 'adminChatRouter',*/
-            'myAdmin/:content(/q=:query)(/p=:page)(/c=:count)': 'adminContentRouter',
-            'myAdmin/:content/create'                         : 'creationRouter',
-            'myAdmin/:content/:id'                            : 'itemRouter'
+            'myApp'                                                     : 'homepageRouter',
+            'myApp/chat'                                                : 'chatRouter',
+            'myApp/cart'                                                : 'cartRouter',
+            'myApp/forgotPass'                                          : 'forgotPassRouter',
+            'myApp/resetPass/:token'                                    : 'resetPassRouter',
+            'myApp/:content(/q=:query)(/s=:sort)(/p=:page)(/c=:count)'  : 'storeContentRouter',
+            'myApp/:content/:id(/p=:page)(/c=:count)'                   : 'storeItemRouter',
+            'myApp/:content/account/:id'                                : 'userRouter',
+            'myApp/users/create'                                        : 'usersCreationRouter',
+            'myAdmin'                                                   : 'adminPageRouter',
+            'myAdmin/chat'                                              : 'logChatRouter',
+            'myAdmin/:content(/q=:query)(/s=:sort)(/p=:page)(/c=:count)': 'adminContentRouter',
+            'myAdmin/:content/create'                                   : 'creationRouter',
+            'myAdmin/:content/:id'                                      : 'itemRouter'
         },
 
         initialize: function (options) {
@@ -32,22 +31,32 @@ define([
             });
         },
 
-        /*chatRouter: function () {
-         this.pageRouter.call();
-         var self;
-         var viewUrl;
-
-         self = this;
-         viewUrl = 'views/chat/chat';
-
-         require([viewUrl], function (CreateView) {
-         if (self.view) {
-         self.view.undelegateEvents();
-         }
-
-         self.view = new CreateView({channel: self.channel});
-         })
-         },*/
+        chatRouter   : function () {
+            this.pageRouter.call();
+            var self;
+            var viewUrl;
+            self = this;
+            viewUrl = 'views/chat/chat';
+            require([viewUrl], function (CreateView) {
+                if (self.view) {
+                    self.view.undelegateEvents();
+                }
+                self.view = new CreateView({channel: self.channel});
+            })
+        },
+        logChatRouter: function () {
+            var self;
+            var viewUrl;
+            this.adminRouter.call();
+            self = this;
+            viewUrl = 'views/chat/login';
+            require([viewUrl], function (CreateView) {
+                if (self.view) {
+                    self.view.undelegateEvents();
+                }
+                self.view = new CreateView({channel: self.channel});
+            })
+        },
 
         cartRouter: function () {
             this.pageRouter.call();
@@ -68,40 +77,6 @@ define([
             });
         },
 
-        /*  logChatRouter: function () {
-         var self;
-         var viewUrl;
-         this.adminRouter.call();
-
-         self = this;
-         viewUrl = 'views/chat/login';
-
-         require([viewUrl], function (CreateView) {
-         if (self.view) {
-         self.view.undelegateEvents();
-         }
-
-         self.view = new CreateView({channel: self.channel});
-         })
-         },*/
-
-        /* adminChatRouter: function () {
-         var self;
-         var viewUrl;
-         this.adminRouter.call();
-
-         self = this;
-         viewUrl = 'views/chat/adchat';
-
-         require([viewUrl], function (CreateView) {
-         if (self.view) {
-         self.view.undelegateEvents();
-         }
-
-         self.view = new CreateView({channel: self.channel});
-         })
-         },*/
-
         homepageRouter: function () {
             var self;
             var viewUrl;
@@ -121,12 +96,11 @@ define([
             });
         },
 
-        storeContentRouter: function (content, query, page, count) {
+        storeContentRouter: function (content, query, sort, page, count) {
             var self;
             var viewUrl;
             var collectionUrl;
             var collection;
-            var num;
             var pageCount;
             var countUrl;
             this.pageRouter.call();
@@ -165,6 +139,7 @@ define([
                 var pageCount;
 
                 query = query || '';
+                sort = sort || '';
                 page = page || 1;
                 count = count || 2;
 
@@ -173,7 +148,8 @@ define([
                     data : {
                         page  : page,
                         count : count,
-                        filter: query
+                        filter: query,
+                        sort  : sort
                     }
                 });
 
@@ -315,15 +291,21 @@ define([
             })
         },
 
-        adminContentRouter: function (content, query, page, count) {
+        adminContentRouter: function (content, query, sort, page, count) {
             var self;
             var viewUrl;
             var collectionUrl;
+            var collection;
+            var countUrl;
+            var numbers;
+            var pageCount;
+            var num;
 
             this.adminRouter.call();
 
             self = this;
             collectionUrl = 'collections/' + content;
+            countUrl = 'collections/' + content + 'Count';
             viewUrl = 'views/' + content + '/list';
 
             if (content == 'home') {
@@ -342,7 +324,10 @@ define([
             }
 
             function viewCreator() {
-                collection = this;
+                collection = this[0];
+                query = this[1];
+                pageCount = this[2];
+                page = this[3];
 
                 require([
                     viewUrl
@@ -352,19 +337,24 @@ define([
                     }
                     self.view = new View({
                         collection: collection,
+                        pageCount : pageCount,
+                        page      : page,
+                        query     : query,
                         channel   : self.channel
                     });
                 });
             }
 
             require([
-                collectionUrl
-            ], function (Collection) {
+                collectionUrl, countUrl
+            ], function (Collection, Count) {
                 collection = new Collection();
+                numbers = new Count();
 
                 query = query || '';
+                sort = sort || '';
                 page = page || 1;
-                count = count || 12;
+                count = count || 5;
 
                 collection.fetch(
                     {
@@ -372,10 +362,23 @@ define([
                         data : {
                             page  : page,
                             count : count,
+                            sort  : sort,
                             filter: query
                         }
                     });
-                collection.on('reset', viewCreator, collection)
+                numbers.fetch({
+                    async: false,
+                    reset: true,
+                    data : {
+                        filter: query
+                    }
+                }).done(function (result) {
+                    num = result.success;
+                    return num;
+                });
+
+                pageCount = Math.ceil(num / count);
+                collection.on('reset', viewCreator, [collection, query, pageCount, page])
             });
         },
 

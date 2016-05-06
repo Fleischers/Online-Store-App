@@ -1,3 +1,11 @@
+img {
+    max-width: 100%; /* This rule is very important, please do not ignore this! */
+}
+
+input[type="checkbox"][disabled] {
+    cursor: default; !important;
+}
+
 .login-form input {
     width: 330px;
     height: 40px;

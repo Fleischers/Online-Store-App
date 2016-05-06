@@ -13,17 +13,23 @@ define([
         el: '#container',
 
         events: {
-            'click #banBtn'    : 'onBan',
-            'click #unbanBtn'  : 'onUnban',
-            'click #createBtn1': 'onCreate',
-            'click #firstName' : 'onAccount',
-            'click #name'      : 'onAccount',
-            'click #removeBtn' : 'onRemove',
-            'click #product'   : 'onProduct'
+            'click #banBtn'                : 'onBan',
+            'click #unbanBtn'              : 'onUnban',
+            'click #createBtn1'            : 'onCreate',
+            'click #firstName'             : 'onAccount',
+            'click #name'                  : 'onAccount',
+            'click #removeBtn'             : 'onRemove',
+            'click #product'               : 'onProduct',
+            'click li[role="presentation"]': 'onOrderByStatus',
+            'click li.sort'                : 'onSort',
+            'click li#page'                : 'onPage'
         },
 
         initialize: function (opt) {
+            this.query = opt.query;
             this.channel = opt.channel;
+            this.pageCount = opt.pageCount;
+            this.page = opt.page;
             this.render();
         },
 
@@ -116,7 +122,7 @@ define([
 
             collection = this.collection;
             $checkboxes = $("input:checkbox:checked");
-            navigateUrl = '#myAdmin/' + this.contentType;
+            navigateUrl = '#myAdmin/' + this.contentType+'/p=1';
 
             $checkboxes.each(function () {
                 $target = $(this);
@@ -141,19 +147,102 @@ define([
             });
         },
 
+        onOrderByStatus: function (e) {
+            e.stopPropagation();
+            var $thisEl;
+            var query;
+            $thisEl = $(e.target);
+            query = $thisEl.text();
+            Backbone.history.fragment = '';
+            Backbone.history.navigate('#myAdmin/' + this.contentType + '/q=' + query + '/p=1', {trigger: true});
+        },
+
+        onSort: function (e) {
+            var $target;
+            var baseUrl;
+            var url;
+            var sortBy;
+            var index;
+            $target = $(e.target);
+            sortBy = $target.attr('data-id');
+            baseUrl = Backbone.history.fragment;
+            index = baseUrl.indexOf('s=');
+            if ((index + 1) == 0) {
+                url = baseUrl.substring(0, baseUrl.length - 3);
+            } else {
+                url = baseUrl.substring(0, index);
+            }
+
+            Backbone.history.fragment = '';
+            Backbone.history.navigate('#' + url + 's=' + sortBy + '/p=1', {trigger: true});
+        },
+
+        onPage: function (e) {
+            var $target;
+            var $page;
+            var contentType;
+            var url;
+            var basicUrl;
+            e.stopPropagation();
+            contentType = this.contentType.split(' ');
+            contentType = contentType[0];
+
+            $target = $(e.target);
+            $page = $target.html();
+            basicUrl = Backbone.history.fragment;
+            url = basicUrl.substring(0, basicUrl.length - 1);
+            Backbone.history.navigate('#' + url + $page, {trigger: true});
+
+        },
+
         render: function () {
+            var $thisEl;
+            var $li;
+            var $sort;
+            var $td1;
+            var $td2;
+            var pages = this.pageCount;
+            var pagesArr = [];
+
+            for (var i = 0; i < pages; i++) {
+                pagesArr.push(i + 1);
+            }
+            $thisEl = this.$el;
 
             $.ajax({
                 url    : 'isAuthAdmin',
                 success: function (params) {
-                    console.log('success');
+                    //console.log('success');
                 },
                 error  : function (error) {
                     Backbone.history.navigate('#myAdmin', {trigger: true});
                 }
             });
 
-            this.$el.html(this.template({collection: this.collection.toJSON()}));
+            this.$el.html(this.template({
+                collection: this.collection.toJSON(),
+                pages     : pagesArr
+            }));
+
+            if (this.query) {
+                $li = $thisEl.find('li.' + this.query);
+                if ($li) {
+                    $li.addClass('active')
+                }
+                if (this.query == 'Abandoned') {
+                    $td1 = $thisEl.find('td#recovery');
+                    $td2 = $thisEl.find('td#recoveryVal');
+                    $sort = $thisEl.find('li.sort');
+                    $sort.show();
+                    $td1.show();
+                    $td2.show();
+                }
+            }
+
+            if ($thisEl) {
+                $li = $thisEl.find("[data-id='" + this.page + "']");
+                $li.addClass('active');
+            }
         }
     });
 });

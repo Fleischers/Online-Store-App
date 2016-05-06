@@ -8,7 +8,6 @@ define(['backbone'], function (Backbone) {
             description   : '',
             statusEnabled : 'false',
             manufacturer  : '',
-            avatar        : '/images/products/default.jpg',
             productReviews: []
         },
 

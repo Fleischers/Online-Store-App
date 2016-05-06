@@ -8,6 +8,7 @@ module.exports = function (app) {
     var productRouter = require('./product');
     var orderRouter = require('./order');
     var productReviewRouter = require('./productReview');
+    var plainOrderRouter = require('./plainOrder');
     var ErrorHandler = require('../handlers/error');
     var UserHandler = require('../handlers/user');
     var handler;
@@ -29,6 +30,7 @@ module.exports = function (app) {
     app.use('/categories', categoryRouter);
     app.use('/products', productRouter);
     app.use('/orders', orderRouter);
+    app.use('/plainOrders', plainOrderRouter);
     app.use('/productReviews', productReviewRouter);
     app.use(eHandler.error);
 };

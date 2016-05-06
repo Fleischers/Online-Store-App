@@ -48,7 +48,7 @@ var UserSchema = new Schema({
         type   : Boolean,
         default: false
     },
-    avatar        : {type: String},
+    avatar        : {type: String, default:'images/avatars/default.jpeg'},
     orders        : [{
         type: Schema.Types.ObjectId,
         ref : 'order'

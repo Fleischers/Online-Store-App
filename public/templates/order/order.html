@@ -35,6 +35,7 @@
         <div class="col-lg-4 col-md-4">
             <div class="table-responsive">
                 <table class="table">
+                    <% if(model.customerInfo){ %>
                     <tr>
                         <td><h4><strong>#Customer info: </strong></h4></td>
                         <td></td>
@@ -69,6 +70,7 @@
                             <h5><%=model.customerInfo[0].email%></h5>
                         </td>
                     </tr>
+                    <%}%>
                 </table>
             </div>
         </div>
@@ -79,9 +81,21 @@
             <h5><strong>#Comment: </strong> <%=model.comment%></h5>
             <h2>Total Price: <%=model.totalPrice%>$</h2>
         </div>
-        <div class="col-lg-2 col-md-2">
+        <div class="col-lg-2 col-md-2" id="fulfillOrder" hidden>
             <h2>
-                <button id="placeOrder" type="button" class="btn btn-lg btn-warning">Fulfill Order
+                <button  type="button" class="btn btn-lg btn-warning" hidden>Fulfill Order
+                </button>
+            </h2>
+        </div>
+        <div class="col-lg-2 col-md-2" id="sendEmail" hidden>
+            <h2>
+                <button  type="button" class="btn btn-lg btn-warning" >Send Email
+                </button>
+            </h2>
+        </div>
+        <div class="col-lg-2 col-md-2" id="emailSent" hidden>
+            <h2>
+                <button  type="button" class="btn btn-lg btn-default" >Email sent
                 </button>
             </h2>
         </div>

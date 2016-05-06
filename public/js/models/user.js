@@ -7,8 +7,7 @@ define(['backbone'], function (Backbone) {
             lastName : '',
             email    : '',
             phone    : '',
-            address  : '',
-            avatar   : '/images/avatars/default.jpg'
+            address  : ''
         },
 
         parse: function (resp) {

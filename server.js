@@ -8,7 +8,7 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index');
-/*var Chat = require('./chat');*/
+var Chat = require('./chat');
 var env = process.env;
 var db;
 require('./config/' + env.NODE_ENV);
@@ -22,8 +22,8 @@ db.on('error', function (err) {
 db.once('connected', function () {
     var sessionConfig;
     var server;
-    var sockets;
     var app;
+
 
     sessionConfig = {
         mongooseConnection: db
@@ -33,8 +33,8 @@ db.once('connected', function () {
     app = express();
     server = http.createServer(app);
 
-    /*var chat = new Chat(server);
-     chat.init();*/
+    var chat = new Chat(server);
+    chat.init();
 
     app.use(express.static(path.join(__dirname, 'public')));
 
@@ -61,5 +61,5 @@ db.once('connected', function () {
 
     server.listen(env.PORT || 3000, function () {
         console.log('==== Server started ====');
-    })
+    });
 });

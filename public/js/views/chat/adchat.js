@@ -38,7 +38,7 @@ define([
                 url    : 'isAuthAdmin',
                 success: function (params) {
                     /*Backbone.history.fragment = '';
-                    Backbone.history.navigate('#myAdmin/chat', {trigger: true});*/
+                     Backbone.history.navigate('#myAdmin/chat', {trigger: true});*/
                 },
                 error  : function (error) {
                     Backbone.history.navigate('#myAdmin', {trigger: true});

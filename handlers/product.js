@@ -50,19 +50,32 @@ module.exports = function () {
     };
 
     this.fetch = function (req, res, next) {
+        var sort;
         query = req.query.filter;
+        sort = req.query.sort;
         paginate = req.query.count;
         page = req.query.page;
-
         if (query) {
-            if(validator.isMongoId(query)){
+            if (validator.isMongoId(query)) {
                 filter = {categories: query}
-            }else{
+            } else {
                 regex = new RegExp(query, "i");
                 filter = {name: regex}
             }
         } else {
             filter = {}
+        }
+        if (sort) {
+            var index = sort.indexOf(':');
+            var field = sort.substring(0, index);
+            var rule = sort.substring(index + 1);
+            if (field == 'name') {
+                sort = {name: rule};
+            } else if (field == 'price') {
+                sort = {price: rule};
+            } else if (field == 'created') {
+                sort = {created: rule};
+            }
         }
 
         Product
@@ -77,6 +90,7 @@ module.exports = function () {
             })
             .skip((page - 1) * paginate)
             .limit(paginate)
+            .sort(sort)
             .exec(function (err, products) {
                 if (err) {
                     return next(err);
@@ -90,9 +104,9 @@ module.exports = function () {
         query = req.query.filter;
 
         if (query) {
-            if(validator.isMongoId(query)){
+            if (validator.isMongoId(query)) {
                 filter = {categories: query}
-            }else{
+            } else {
                 regex = new RegExp(query, "i");
                 filter = {name: regex}
             }
@@ -109,6 +123,27 @@ module.exports = function () {
         })
     };
 
+    this.removeCategory = function(req,res, next){
+        var id;
+        categories = req.body.categories;
+        id=req.params.id;
+
+        Product.findByIdAndUpdate(id, {$pull: {"categories": categories}}, {
+                safe  : true,
+                upsert: true
+            })
+            .exec(function (err, products) {
+                if (err) {
+
+                    return next(err);
+                }
+
+                req.params.id=categories;
+                req.body.products=products._id;
+                next();
+            })
+    };
+
     // ToDo: при deepPopulate вываливается куча ненужной инфы, нужно придумать как ее убрать
     // и оставить только поле postedBy
     this.fetchById = function (req, res, next) {
@@ -118,7 +153,7 @@ module.exports = function () {
             .findById(id, {__v: 0})
             .populate({
                 path  : 'categories',
-                select: 'name -_id'
+                select: '_id name'
             })
             .deepPopulate('productReviews.postedBy', {
                 populate: {
@@ -210,6 +245,7 @@ module.exports = function () {
         productReviews = body.productReviews;
         image = body.image;
         categories = req.body.categories;
+
         if (image) {
             Product.findByIdAndUpdate(id, {$set: {image: image}})
                 .exec(function (err, products) {
@@ -231,7 +267,9 @@ module.exports = function () {
                         return next(err);
                     }
 
-                    res.status(200).send({success: products});
+                    req.body.products = products._id;
+                    req.params.id = categories;
+                    next();
                 })
         } else if (productReviews) {
             Product.findByIdAndUpdate(id, {$push: {"productReviews": {_id: productReviews}}}, {

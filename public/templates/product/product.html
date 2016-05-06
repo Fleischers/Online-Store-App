@@ -1,19 +1,29 @@
 <div class="container-fluid">
-    <div class="col-md-12"><h3><%=model.name%></h3></div>
+    <div class="col-md-2"><h3><%=model.name%></h3></div>
+    <div class="col-md-8"></div>
+    <div class="col-md-2">
+
+        <h3><div class="btn-group">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Add to category: <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" id="addCategory">
+                <% (collection).forEach(function(model){ %>
+                <li id="<%=model._id%>"><a><%=model.name%></a></li>
+                <%})%>
+            </ul>
+        </div></h3>
+
+    </div>
 </div>
 <hr>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
             <div class="col-md-5">
-                <div class="thumbnail" id="imgPlace">
+                <div class="thumbnail">
                     <img src="<%= model.image %>" alt="..." id="image">
-                    <img src="" alt="" id="img2" hidden>
                 </div>
-                <!--<div class="thumbnail" id="img2" hidden>
-
-                </div>-->
-
 
                 <button type="button" class="btn btn-default" style="width: 100%" data-toggle="modal"
                         data-target="#myModal">
@@ -34,11 +44,11 @@
                                 </h4>
                             </div>
                             <div class="modal-body" align="center">
-                                <h4 id="adminHint" align="center"><small>Beware, your image should be 500x500 px!</small></h4>
-                                <a class="thumbnail">
-                                    <canvas id="myCanvas" width="500" height="500"></canvas>
+                                <a class="thumbnail" hidden>
+                                    <canvas id="myCanvas" width="500" height="500" hidden></canvas>
+                                    <img scr="" id="canvasImg" hidden>
                                 </a>
-                                <img id="canvasImg" alt="Right click to save me!" hidden>
+                                <div><img scr="" id="canvasImage"></div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -74,17 +84,25 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>Status Enabled: </strong></td>
-                        <td id="statusEnabled">
-                            <span><%=model.statusEnabled%></span>
-                            <input class="edit" value="<%=model.statusEnabled%>" hidden>
-                        </td>
-                    </tr>
-                    <tr>
                         <td><strong>Description: </strong></td>
                         <td id="description">
                             <span><%=model.description%></span>
                             <input class="edit" value="<%=model.description%>" hidden>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><h5><strong>Status: </strong></h5></td>
+                        <td id="statusEnabled">
+                            <span><% if(model.statusEnabled==true){ %>
+                        <button type="button" class="btn btn-success" style="width: 100%">
+                            Available
+                        </button>
+                        <%}else{%>
+                        <button type="button" class="btn btn-danger" style="width: 100%">
+                            Not Available
+                        </button>
+                        <%}%></span>
+                            <input class="edit" value="<%=model.statusEnabled%>" hidden>
                         </td>
                     </tr>
                 </table>
@@ -95,15 +113,18 @@
             <table class="table">
                 <% if(model.categories){model.categories.forEach(function(item){ %>
                 <tr>
-                    <td><%=item.name%></td>
+                    <td><h5><strong><%=item.name%></strong></h5></td>
+                    <td>
+                        <button id="removeCategory" data-id="<%=item._id%>" type="button" class="btn btn-danger" style="width: 40%">
+                            Remove
+                        </button>
+                    </td>
                 </tr>
                 <%})}%>
             </table>
 
         </div>
     </div>
-
-
 </div>
 
 

@@ -21,47 +21,47 @@ function Chat(options) {
 
 Chat.prototype.adminIsPresent = function () {
     if (this.admin) {
-      return true;
+        return true;
     } else {
-      return false;
+        return false;
     }
 };
 
 function adminSubscribtions(self, socket) {
-  self.admin.emit(CHAT.info, {
-      status: 0,
-      message: 'New user connected',
-      room: socket.id
-  });
-  self.admin.join(socket.id);
+    self.admin.emit(CHAT.info, {
+        status: 0,
+        message: 'New user connected',
+        room: socket.id
+    });
+    self.admin.join(socket.id);
 
-  socket.on(CHAT.message, function onMessage(msg) {
-      var responseMessage = _.cloneDeep(msg);
-      if (_.isObject(responseMessage) || !_.isString(
-              responseMessage)) {
-          responseMessage.date = new Date();
-          responseMessage._id = shortid.generate();
-          history.set(responseMessage._id,
-              responseMessage);
+    socket.on(CHAT.message, function onMessage(msg) {
+        var responseMessage = _.cloneDeep(msg);
+        if (_.isObject(responseMessage) || !_.isString(
+                responseMessage)) {
+            responseMessage.date = new Date();
+            responseMessage._id = shortid.generate();
+            history.set(responseMessage._id,
+                responseMessage);
 
-          winston.debug('message:',
-              responseMessage);
-          if (socket == self.admin) {
-              socket.broadcast.to(msg.room).emit(
-                  CHAT.message,
-                  responseMessage);
-          } else {
-              socket.broadcast.to(self.admin.id).emit(
-                  CHAT.message,
-                  responseMessage);
-          }
-      } else {
-          socket.emit(CHAT.info, {
-              status: 500,
-              message: 'message should be object'
-          });
-      }
-  });
+            winston.debug('message:',
+                responseMessage);
+            if (socket == self.admin) {
+                socket.broadcast.to(msg.room).emit(
+                    CHAT.message,
+                    responseMessage);
+            } else {
+                socket.broadcast.to(self.admin.id).emit(
+                    CHAT.message,
+                    responseMessage);
+            }
+        } else {
+            socket.emit(CHAT.info, {
+                status: 500,
+                message: 'message should be object'
+            });
+        }
+    });
 }
 
 Chat.prototype.init = function () {
@@ -75,12 +75,12 @@ Chat.prototype.init = function () {
         } else {
             socket.on(CHAT.message, function onMessage(msg) {
                 if (self.adminIsPresent()) {
-                  adminSubscribtions(self, socket);
+                    adminSubscribtions(self, socket);
                 } else {
-                  socket.emit(CHAT.info, {
-                      status: 404,
-                      message: 'There is no admin'
-                  });
+                    socket.emit(CHAT.info, {
+                        status: 404,
+                        message: 'There is no admin'
+                    });
                 }
             });
             socket.on('auth', function (msg) {
@@ -99,10 +99,10 @@ Chat.prototype.init = function () {
                             return;
                         }
                         /*socket.emit('info', {
-                            status: 200,
-                            message: AUTH_FAIL_MESSAGE,
-                            error: err
-                        });*/
+                         status: 200,
+                         message: AUTH_FAIL_MESSAGE,
+                         error: err
+                         });*/
                         socket.emit('login',{
                             status: 200,
                             message: 'good luck'

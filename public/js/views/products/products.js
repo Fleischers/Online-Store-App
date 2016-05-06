@@ -2,9 +2,11 @@ define([
     'backbone',
     'underscore',
     'text!templates/product/product.html',
-    'models/product'
+    'models/product',
+    'collections/categories',
+    'cropper'
     /*'ENTER_KEY'*/
-], function (Backbone, _, productTemplate, Product) {
+], function (Backbone, _, productTemplate, Product, Category, cropper) {
     var self;
     var img;
     var canvas;
@@ -48,11 +50,13 @@ define([
             'blur .edit'           : 'onCloseEdit',
             'keypress .edit'       : 'updateOnEnter',
             'click #logOutBtn'     : 'onLogOut',
-            'click #uploadImg'     : 'sendPicture'
-
+            'click #uploadImg'     : 'sendPicture',
+            'click #addCategory'   : 'onAddCategory',
+            'click #removeCategory': 'onRemoveCategory'
         },
 
         initialize: function (opt) {
+            var collection;
             self = this;
 
             this.$el.on('change', '#imageInput', this.pictureAdded);
@@ -69,30 +73,46 @@ define([
                 }
             });
 
+            this.collection = new Category();
+            collection = this.collection;
+            collection.fetch({
+                success: function (models) {
+                    url = models.urlRoot + '/' + models.id;
+                    self.render();
+                },
+                error  : function (model, xhr) {
+                    alert(xhr.statusText);
+                }
+            });
+
             this.render();
         },
 
         pictureAdded: function (e) {
+            var $canvasImage;
             canvas = document.getElementById('myCanvas');
             context = canvas.getContext('2d');
             _URL = window.URL || window.webkitURL;
 
             if (e.target.files && e.target.files[0]) {
                 img = new Image();
-                img.onload = function () {
-                    sourceX = 0;
-                    sourceY = 0;
-                    sourceWidth = this.width;
-                    sourceHeight = this.height;
-                    destWidth = sourceWidth;
-                    destHeight = sourceHeight;
-                    destX = canvas.width / 2 - destWidth / 2;
-                    destY = canvas.height / 2 - destHeight / 2;
-                    $('#loadedImageContainer').text(destX + ', ' + destY);
-                    context.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight);
-                };
                 img.src = _URL.createObjectURL(e.target.files[0]);
+                $canvasImage=$('#canvasImage');
+                $canvasImage.attr('src', img.src);
             }
+
+            $canvasImage.cropper({
+                aspectRatio: 9 / 9,
+                crop       : function (e) {
+                    // Output the result data for cropping image.
+                    sourceX = e.x;
+                    sourceY = e.y;
+                    sourceWidth = e.width;
+                    sourceHeight = e.height;
+                    context.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, 500, 500);
+                }
+            });
+
         },
 
         sendPicture: function (e) {
@@ -104,6 +124,9 @@ define([
                 canvas = document.getElementById("myCanvas");
                 dataURL = canvas.toDataURL();
                 document.getElementById('canvasImg').src = dataURL;
+                context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                $('#canvasImage').cropper('destroy');
 
                 blobBin = atob(dataURL.split(',')[1]);
                 array = [];
@@ -132,6 +155,8 @@ define([
                     alert('image saved!');
 
                     idReceived = res.success;
+                    $('img#canvasImg').removeAttr('src');
+                    $('img#canvasImage').removeAttr('src');
                     $('img#image').attr("src", idReceived + '?' + Math.random());
                 });
             }
@@ -215,9 +240,79 @@ define([
              }*/
         },
 
+        onAddCategory: function (e) {
+            var categoryId;
+            var $li;
+            self = this;
+
+            e.stopPropagation();
+
+            $target = $(e.target);
+            $li = $target.closest('li');
+            categoryId = $li.attr('id');
+
+            changes = {};
+            changes['categories'] = categoryId;
+
+            model = this.model;
+            model.save(changes, {
+                patch  : true,
+                wait   : true,
+                success: function () {
+                    Backbone.history.fragment = '';
+                    Backbone.history.navigate('#myAdmin/products/' + self.model.id, {trigger: true})
+                },
+                error  : function (model, xhr) {
+                    alert(xhr.statusText);
+                }
+            });
+        },
+
+        onRemoveCategory: function (e) {
+            var $target;
+            var categoryId;
+            var model;
+            e.stopPropagation();
+            $target = $(e.target);
+            categoryId = $target.attr('data-id');
+            console.log(categoryId);
+            changes = {};
+            changes['categories'] = categoryId;
+            model = this.model;
+            model.urlRoot = '/products/removeCategory/';
+            model.save(changes, {
+                patch  : true,
+                wait   : true,
+                success: function (model) {
+                    var id = model.id;
+                    Backbone.history.fragment = '';
+                    Backbone.history.navigate('#myAdmin/products/' + id, {trigger: true});
+                },
+                error  : function (model, xhr) {
+                    alert(xhr.statusText);
+                }
+            });
+        },
+
         render: function () {
+            var collection;
+            var $thisEl;
+            var $li;
+            collection = this.collection.toJSON();
             model = this.model.toJSON();
-            this.$el.html(this.template({model: model}));
+
+            this.$el.html(this.template({
+                collection: collection,
+                model     : model
+            }));
+
+            $thisEl = this.$el;
+            if (model.categories) {
+                model.categories.forEach(function (item) {
+                    $li = $thisEl.find('li#' + item._id);
+                    $li.hide()
+                })
+            }
         }
 
     });

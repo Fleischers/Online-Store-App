@@ -1,7 +1,37 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2"><h3>Products</h3></div>
-        <div class="col-md-8"></div>
+        <div class="col-md-7"></div>
+        <div class="col-md-1" align="right" style="padding: 0px">
+            <h3>
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="true">
+                        #Sort: <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li class="sort">
+                            <a data-id="name:1">#A-Z</a>
+                        </li>
+                        <li class="sort">
+                            <a data-id="name:-1">#Z-A</a>
+                        </li>
+                        <li class="sort">
+                            <a data-id="price:1">#Price - lower first</a>
+                        </li>
+                        <li class="sort">
+                            <a data-id="price:-1">#Price - higher first</a>
+                        </li>
+                        <li class="sort">
+                            <a data-id="created:1">#Older first</a>
+                        </li>
+                        <li class="sort">
+                            <a data-id="created:-1">#Newer first</a>
+                        </li>
+                    </ul>
+                </div>
+            </h3>
+        </div>
         <div class="col-md-2">
             <h3>
                 <button type="button" class="btn btn-default" id="createBtn1">Create</button>
@@ -23,11 +53,31 @@
                     <td><label><input type="checkbox" id="blankCheckbox" data-id="<%=model._id%>"></label></td>
                     <td id="name"><%=model.name%></td>
                     <td><%=model.price%>$</td>
-                    <td><%=model.statusEnabled%></td>
+                    <td><% if(model.statusEnabled==true){ %>
+                        <button type="button" class="btn btn-success" style="width: 40%">
+                            Available
+                        </button>
+                        <%}else{%>
+                        <button type="button" class="btn btn-danger" style="width: 40%">
+                            Not Available
+                        </button>
+                        <%}%>
+                    </td>
                 </tr>
                 <%})%>
             </table>
         </div>
+    </div>
+    <div class="row" align="center">
+        <nav>
+            <ul class="pagination" id="pagination">
+                <% if(pages){pages.forEach(function(item){ %>
+                <li class="" id="page" data-id="<%=item%>">
+                    <a><%=item%></a>
+                </li>
+                <%})}%>
+            </ul>
+        </nav>
     </div>
 </div>
 
